@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en-us" xml:lang="en-us">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="security" content="public" />
+<meta name="Robots" content="index,follow" />
+<meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
+<meta name="DC.Type" content="concept" />
+<meta name="DC.Title" content="Ant task code review" />
+<meta name="abstract" content="If you use the Apache Ant build tool to build plug-ins in the Eclipse plug-in development environment (PDE), you can include code reviews in your build process." />
+<meta name="description" content="If you use the Apache Ant build tool to build plug-ins in the Eclipse plug-in development environment (PDE), you can include code reviews in your build process." />
+<meta name="DC.subject" content="code review, Ant task, plug-in development, plug-in development" />
+<meta name="keywords" content="code review, Ant task, plug-in development, plug-in development" />
+<meta name="DC.Relation" scheme="URI" content="../topics/trunheadlessant.html" />
+<meta name="copyright" content="(C) Copyright IBM Corporation 2004 2007" />
+<meta name="DC.Rights.Owner" content="(C) Copyright IBM Corporation 2004 2007" />
+<meta name="DC.Format" content="XHTML" />
+<meta name="DC.Identifier" content="canttask" />
+<meta name="DC.Language" content="en-us" />
+<!-- All rights reserved. Licensed Materials Property of IBM -->
+<!-- US Government Users Restricted Rights -->
+<!-- Use, duplication or disclosure restricted by -->
+<!-- GSA ADP Schedule Contract with IBM Corp. -->
+<link rel="stylesheet" type="text/css" href="../ibmdita.css" />
+<link rel="stylesheet" type="text/css" href="../swg_info_common.css" />
+<title>Java code review as an Ant task</title>
+</head>
+<body id="canttask"><a name="canttask"><!-- --></a>
+<h1 class="topictitle1">Ant task code review</h1>
+<div><p>If you use the Apache Ant build tool to build plug-ins in the Eclipse
+plug-in development environment (PDE), you can include code reviews in your
+build process.</p>
+<p>The analysis feature includes an Ant task called analysis.analyze that
+you can add to a build file in a plug-in development project. This enables
+you to run code reviews as a PDE project builds and lets you perform the tasks
+of building and testing the quality of your code in a single step.</p>
+<p>The analysis.analyze task takes up to three attributes that specify the
+projects that contain the Java™ source code to analyze, the rules to
+apply, and the location of the analysis results.</p>
+<div class="example"><h2 class="sectiontitle">Ant task example</h2>The following example shows an Ant
+task that is part of a PDE project's build.xml file. When the hello.world
+project builds, the task runs a code review on the source code. The task applies
+the code review rules it finds in a rule file located in c:\rules and writes
+the results of the review to XML and HTML files in c:\results.<pre>&lt;target name="code review"&gt;
+  &lt;analysis.analyze
+    ruleFile="c:/rules/commlinecoderev.dat"
+    projects="hello.world"
+    exportdirectory="c:/results" /&gt;
+&lt;/target&gt;</pre>
+</div>
+</div>
+<div><div class="reltasks"><strong>Related tasks</strong><br />
+<div><a href="../topics/trunheadlessant.html" title="You can run a code review when you build an Eclipse plug-in in the plug-in development environment (PDE) by adding an Apache Ant task to the plug-in's build.xml file.">Running a code review as an Ant task</a></div>
+</div>
+</div></body>
+</html>

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en-us" xml:lang="en-us">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="security" content="public" />
+<meta name="Robots" content="index,follow" />
+<meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
+<meta name="DC.Type" content="concept" />
+<meta name="DC.Title" content="Rules and rule categories" />
+<meta name="abstract" content="Rules are the smallest building blocks of a static analysis configuration. Each analysis configuration applies different rules, or sets of rules, that define the conditions that generate results and that assess the quality of your resources. A rule category is a collection of analysis rules, or other categories, that focus on a particular aspect of standards compliance." />
+<meta name="description" content="Rules are the smallest building blocks of a static analysis configuration. Each analysis configuration applies different rules, or sets of rules, that define the conditions that generate results and that assess the quality of your resources. A rule category is a collection of analysis rules, or other categories, that focus on a particular aspect of standards compliance." />
+<meta name="DC.subject" content="severity levels, static analysis rules, static analysis, rules and rule categories, description, domains, analysis, static, rules and rule categories, severity levels, rules, static analysis, rule categories, rule categories" />
+<meta name="keywords" content="severity levels, static analysis rules, static analysis, rules and rule categories, description, domains, analysis, static, rules and rule categories, severity levels, rules, static analysis, rule categories, rule categories" />
+<meta name="DC.Relation" scheme="URI" content="../topics/truncodereview.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tviewcodereview.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tapplyquickfixes.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/rreference.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/rrulecatdesc.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/trunheadless.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/rreference.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/rheadless.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/trunheadlessant.html" />
+<meta name="copyright" content="(C) Copyright IBM Corporation 2004 2007" />
+<meta name="DC.Rights.Owner" content="(C) Copyright IBM Corporation 2004 2007" />
+<meta name="DC.Format" content="XHTML" />
+<meta name="DC.Identifier" content="canalysisrules" />
+<meta name="DC.Language" content="en-us" />
+<!-- All rights reserved. Licensed Materials Property of IBM -->
+<!-- US Government Users Restricted Rights -->
+<!-- Use, duplication or disclosure restricted by -->
+<!-- GSA ADP Schedule Contract with IBM Corp. -->
+<link rel="stylesheet" type="text/css" href="../ibmdita.css" />
+<link rel="stylesheet" type="text/css" href="../swg_info_common.css" />
+<title>Code review rules and rule categories</title>
+</head>
+<body id="canalysisrules"><a name="canalysisrules"><!-- --></a>
+<h1 class="id_title_id">Rules and rule categories</h1>
+<div><p class="id_shortdesc_id"><em class="anchor_top_anchor"></em>Rules
+are the smallest building blocks of a static analysis configuration. Each
+analysis configuration applies different rules, or sets of rules, that define
+the conditions that generate results and that assess the quality of your resources.
+A rule category is a collection of analysis rules, or other categories, that
+focus on a particular aspect of standards compliance.</p>
+<p>A rule is a specific statement that describes one action to follow when
+you write code. For example, the following statements are code review rules:</p>
+<ul><li>Avoid conditional expressions with more than four operators</li>
+<li>Avoid nesting more than one class</li>
+<li>Avoid nesting more than one <samp class="codeph">if</samp> statement</li>
+</ul>
+<p>Rules form the basis of an analysis configuration. When you perform an
+analysis, you check whether your resources comply with a specific rule, or
+set of rules. You can modify rules and create user-defined rules if you need
+them to be more specific to your application design standards. The rules listed
+earlier, for example, belong to the design principles category. Rules that
+apply to similar capabilities, or code structures, belong to the same category.
+You can apply rules from several categories depending on the purpose of your
+review. </p>
+<div class="section"><h2 class="id_title_id2">Severity levels</h2><p>Rule
+authors assign a severity level to each rule to specify how seriously a resource
+that conflicts with the rule deviates from the standards. Each rule has one
+of the severity levels in the following table:</p>
+<table cellpadding="4" cellspacing="0" summary="" border="1" class="simpletableborder"><tr><th valign="bottom" align="left" id="d0e105">Icon</th>
+<th valign="bottom" align="left" id="d0e107">Severity level</th>
+<th valign="bottom" align="left" id="d0e109">Description</th>
+</tr>
+<tr><td valign="top" headers="d0e105"><img class="id_image_id1" src="../images/tptp_recommend.gif" alt="Green check mark icon." /></td>
+<td valign="top" headers="d0e107">Recommendation</td>
+<td valign="top" headers="d0e109">This is the lowest severity level. The result indicates a problem
+that is not serious, but that you should consider fixing soon.</td>
+</tr>
+<tr><td valign="top" headers="d0e105"><img class="id_image_id2" src="../images/tptp_warning.gif" alt="Brown exclamation point icon." /></td>
+<td valign="top" headers="d0e107">Warning</td>
+<td valign="top" headers="d0e109">This severity level indicates that a resource very likely has a problem
+that you need to resolve.</td>
+</tr>
+<tr><td valign="top" headers="d0e105"><img class="id_image_id3" src="../images/tptp_severe.gif" alt="Purple cross icon." /></td>
+<td valign="top" headers="d0e107">Severe</td>
+<td valign="top" headers="d0e109">This is the highest severity level. It indicates that you should
+resolve the problem that the result points to.</td>
+</tr>
+</table>
+<p>Although recommendation is the lowest level, it is still
+important to address results with this severity level. Even if these results
+are not immediate problems, they could lead to problems in the future. The
+rules are based on a set of best practices and industry standards to which
+development teams should adhere.</p>
+</div>
+<div class="section"><h2 class="id_title_id3">Rule categories</h2><p>Analysis
+domains are components of the analysis framework that implement groups of
+tools that contain categories. You can select different domains for different
+types of analysis and, depending on the requirements of your analysis, you
+can enable or disable a rule category and individual rules in the category.</p>
+<p>An
+example of a rule category is the performance category for code reviews. Performance,
+as an important aspect of the overall quality of an application, should be
+one of the characteristics you test in a code review.  The performance rule
+category has three subcategories, memory, profiling, and speed, each of which
+contains a set of rules that you apply to your source code when you run an
+analysis with this category selected.</p>
+<em class="anchor_bottom_anchor"></em></div>
+</div>
+<div><div class="reltasks"><strong>Related tasks</strong><br />
+<div><a href="../topics/truncodereview.html" title="You can run a code review on your Java source code with an analysis configuration that uses the Code Review for Java domain, it's rule categories, and rules. In the analysis configuration, you can also determine the scope of an analysis, the source code that you want to analyze.">Running a code review</a></div>
+<div><a href="../topics/tviewcodereview.html" title="You can view the results of an automated code review in the Analysis Results view. You can filter the results to display results that correspond to each rule in your analysis configuration, or only those results that do not conform to a particular rule. From the Analysis Results view, you can also open resources in their associated editors to correct problems, or apply quick fixes, if they are available.">Viewing code review results</a></div>
+<div><a href="../topics/tapplyquickfixes.html" title="You can correct problems in the results of your code review analysis automatically if rule authors provided a quick fix. A quick fix is an automated solution for a common or trivial problem. Quick fixes can save time and ensure that problems are corrected consistently.">Applying quick fixes to code review results</a></div>
+<div><a href="../topics/trunheadless.html" title="You can run code reviews on Java source code from the command line using analysis rules in a rules file that you created.">Running a code review from the command line</a></div>
+<div><a href="../topics/trunheadlessant.html" title="You can run a code review when you build an Eclipse plug-in in the plug-in development environment (PDE) by adding an Apache Ant task to the plug-in's build.xml file.">Running a code review as an Ant task</a></div>
+</div>
+<div class="relref"><strong>Related reference</strong><br />
+<div><a href="../topics/rreference.html" title="The Code Review for Java domain comprises rule categories that contain rules that focus on several aspects of software quality such as design principles, globalization, J2EE and J2SE best practices, J2EE security, and software performance. An analysis of Java source code applies the rules to identify code that does not conform to recognized standards.">Code review reference</a></div>
+<div><a href="../topics/rrulecatdesc.html" title="This topic describes the rule categories and subcategories that you can use in a Java code review.">Rule categories and subcategories</a></div>
+<div><a href="../topics/rheadless.html" title="This topic describes the parameters you must specify to run a code review analysis from a command line interface..">Command line code review reference</a></div>
+</div>
+</div></body>
+</html>

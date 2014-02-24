@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en-us" xml:lang="en-us">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="security" content="public" />
+<meta name="Robots" content="index,follow" />
+<meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
+<meta name="DC.Type" content="reference" />
+<meta name="DC.Title" content="Structural patterns" />
+<meta name="abstract" content="The Structural patterns rule category contains patterns that show various types of structural elements, including structural antipatterns." />
+<meta name="description" content="The Structural patterns rule category contains patterns that show various types of structural elements, including structural antipatterns." />
+<meta name="DC.subject" content="structural patterns rule category, architectural discovery, architectural discovery, structural patterns rule category, rule categories, structural patterns" />
+<meta name="keywords" content="structural patterns rule category, architectural discovery, architectural discovery, structural patterns rule category, rule categories, structural patterns" />
+<meta name="DC.Relation" scheme="URI" content="../topics/rarchdiscref.html" />
+<meta name="copyright" content="(C) Copyright IBM Corporation 2004 2007" />
+<meta name="DC.Rights.Owner" content="(C) Copyright IBM Corporation 2004 2007" />
+<meta name="DC.Format" content="XHTML" />
+<meta name="DC.Identifier" content="rstructuralpttrns" />
+<meta name="DC.Language" content="en-us" />
+<!-- All rights reserved. Licensed Materials Property of IBM -->
+<!-- US Government Users Restricted Rights -->
+<!-- Use, duplication or disclosure restricted by -->
+<!-- GSA ADP Schedule Contract with IBM Corp. -->
+<link rel="stylesheet" type="text/css" href="../ibmdita.css" />
+<link rel="stylesheet" type="text/css" href="../swg_info_common.css" />
+<link rel="Start" href="../topics/rarchdiscref.html" />
+<title>Structural patterns</title>
+</head>
+<body id="rstructuralpttrns"><a name="rstructuralpttrns"><!-- --></a>
+<h1 class="topictitle1">Structural patterns</h1>
+<div><p>The Structural patterns rule category contains patterns that show
+various types of structural elements, including structural antipatterns.</p>
+<div class="section"><h2 class="sectiontitle">Purpose</h2>The following table lists each pattern, and
+its purpose, in the Structural Patterns category:</div>
+<table cellpadding="4" cellspacing="0" summary="" border="1" class="simpletableborder"><tr><th valign="bottom" align="left" id="d0e32">Pattern</th>
+<th valign="bottom" align="left" id="d0e34">Purpose</th>
+</tr>
+<tr><td valign="top" headers="d0e32">Component Cyclic Dependency</td>
+<td valign="top" headers="d0e34">A Component Cyclic Dependency pattern is a structural antipattern
+that consists of interdependent components. A cyclic dependency between components
+is considered a major architectural flaw. Such a dependency makes the code
+difficult to understand and maintain. More important, cyclic dependencies
+compromise software testing, parallel development, and reuse. Large-scale
+software with many cyclic dependencies is fragile and unstable. </td>
+</tr>
+<tr><td valign="top" headers="d0e32">Component Global Breakable</td>
+<td valign="top" headers="d0e34">A Component Global Breakable pattern is a structural antipattern
+for a system component that is often affected when any other component is
+changed. Except for high-level concrete implementations, global breakables
+are undesirable because they indicate fragility and lack of modularity in
+the system. </td>
+</tr>
+<tr><td valign="top" headers="d0e32">Component Global Butterfly</td>
+<td valign="top" headers="d0e34">A Component Global Butterfly pattern is a structural pattern for
+an object that has many global dependents. Changes to a global butterfly often
+have a significant impact on the rest of the system. For this reason, a global
+butterfly should only be either a basic system interface or a utility class. </td>
+</tr>
+<tr><td valign="top" headers="d0e32">Component Global Hub</td>
+<td valign="top" headers="d0e34">A Component Global Hub pattern is a structural antipattern for a
+component that has many global dependencies and many global dependents. A
+global hub is often affected when anything is changed, and it affects a significant
+percentage of the system when it changes. Global hubs are undesirable because
+they indicate fragility and lack of modularity in the system. </td>
+</tr>
+<tr><td valign="top" headers="d0e32">Component Local Breakable</td>
+<td valign="top" headers="d0e34">A Component Local Breakable pattern is a structural antipattern for
+a component that has many immediate dependencies. Such a component carries
+excessive responsibility and is usually identified by many long methods. Breakables
+make the code difficult to understand, maintain, and reuse.</td>
+</tr>
+<tr><td valign="top" headers="d0e32">Component Local Butterfly	</td>
+<td valign="top" headers="d0e34">A Component Local Butterfly pattern is a structural pattern for a
+component that has many immediate dependents. Changes to a local butterfly
+often have a significant immediate impact on the rest of the system. For this
+reason, a local butterfly should only be either a basic system interface or
+a utility class. </td>
+</tr>
+<tr><td valign="top" headers="d0e32">Component Local Hub	</td>
+<td valign="top" headers="d0e34">A Component Local Hub pattern is a structural antipattern for a component
+that has many immediate dependencies and many immediate dependents. Such a
+component carries excessive responsibility and also serves as a utility or
+commonly used component. Hubs make the code difficult to understand, maintain,
+and reuse. Hubs also make the code fragile and unstable. </td>
+</tr>
+<tr><td valign="top" headers="d0e32">Package Cyclic Dependency</td>
+<td valign="top" headers="d0e34">A Package Cyclic Dependency pattern is a structural antipattern that
+consists of interdependent packages. A cyclic dependency between packages
+is considered a major architectural flaw. Such a dependency makes the code
+difficult to understand and to maintain. More importantly, cyclic dependencies
+undermine testability, parallel development, and reuse. Large-scale software
+with many cyclic dependencies is fragile and unstable. </td>
+</tr>
+<tr><td valign="top" headers="d0e32">Package Global Breakable</td>
+<td valign="top" headers="d0e34">A Package Global Breakable pattern is a structural antipattern for
+a package that has many global dependencies. Such a package carries excessive
+responsibility and usually contains several components with many global dependencies. </td>
+</tr>
+<tr><td valign="top" headers="d0e32">Package Global Butterfly</td>
+<td valign="top" headers="d0e34">A Package Global Butterfly pattern is a structural pattern for a
+package that has many global dependents. Changes to a global butterfly often
+have a significant impact on the rest of the system. For this reason, a global
+butterfly package should only consist of either basic system interfaces or
+utility classes.</td>
+</tr>
+<tr><td valign="top" headers="d0e32">Package Global Hub</td>
+<td valign="top" headers="d0e34">A Package Global Hub pattern is a structural antipattern for a package
+that has many immediate dependencies. Such a package carries globally excessive
+responsibility and also serves as a utility or commonly used package. The
+package usually contains many components that have several global dependencies
+and dependents. Package Global Hubs break the reusability of modules and make
+the code difficult to understand and maintain. </td>
+</tr>
+<tr><td valign="top" headers="d0e32">Package Local Breakable	</td>
+<td valign="top" headers="d0e34">A Package Local Breakable pattern is a structural antipattern for
+a package that has many immediate dependencies. Such a package carries excessive
+responsibility. The package usually contains a large number of components
+or several components with many immediate dependencies. A Package Local Breakable
+makes the code difficult to understand, maintain, and reuse. </td>
+</tr>
+<tr><td valign="top" headers="d0e32">Package Local Butterfly</td>
+<td valign="top" headers="d0e34">A Package Local Butterfly pattern is a structural pattern for a package
+that has many immediate dependents. Such a package serves as a utility or
+commonly used package. </td>
+</tr>
+<tr><td valign="top" headers="d0e32">Package Local Hub	</td>
+<td valign="top" headers="d0e34">A Package Local Hub pattern is a structural antipattern for a package
+that has many immediate dependencies and dependents. Such a package carries
+excessive responsibility and also serves as a utility or commonly used package.
+The package usually contains many components that can have many immediate
+dependencies. Hubs make the code difficult to understand, maintain, and reuse.
+Hubs also make the code fragile and unstable.</td>
+</tr>
+</table>
+</div>
+<div>
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a href="../topics/rarchdiscref.html" title="The Architectural Discovery for Java domain comprises four rule categories that contain the rules for identifying patterns and antipatterns in Java source code. This section contains topics that describe the patterns that an architectural discovery analysis can detect automatically.">Architectural discovery patterns</a></div>
+</div>
+</div></body>
+</html>

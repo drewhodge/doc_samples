@@ -1,0 +1,747 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    
+<!-- ...................................................................... -->
+<!-- File: qnx.xml.qnx.eclipse/build.xml                                    -->
+<!--                                                                        -->
+<!-- Purpose: Controls DITA OT build for QNX Eclipse plug-ins.              -->
+<!--                                                                        --> 
+<!-- ...................................................................... -->
+<!-- Notes/History:                                                         -->
+<!-- 16.Mar.2013    First pass to build individual Eclipse plug-ins.        -->
+<!-- 22.Mar.2013    Added code to build multiple plug-ins.  NOTE: The       -->
+<!--                'build-multiple-plugins' target uses the Antcontrib     -->
+<!--                'var' task, so some of the properties used in this task -->
+<!--                are no longer immutable.                                -->
+<!-- 04.Apr.2013    Modified code to use FileRenamer utility.               -->
+<!-- 17.Sep.2013    Added new target for processing safety tables.          -->
+<!-- ...................................................................... -->
+
+<project name="qnx.xml.qnx.eclipse">
+
+    <!-- Called by QNX Eclipse Base:xml.qnx.eclipse.base preprocessor -->
+    <target name="dita2qnxEclipse"
+        description="Determine build type: single plug-in or multiple plug-ins.">
+        <echoproperties />
+
+        <!-- Build individual Eclipse plug-in or multiple plug-ins depending
+             on the value of the 'qnx.prod.build' property. -->
+        <if>
+            <equals arg1="${qnx.prod.build}" arg2="singlebuild" />
+            <then>
+                <antcall target="build-single-plugin" />
+            </then>
+            <elseif>
+                <equals arg1="${qnx.prod.build}" arg2="multiplebuild" />
+                <then>
+                    <antcall target="build-multiple-plugins" />
+                </then>
+            </elseif>
+            <else>
+                <echo message="Could not determine build type: single/multiple." />
+            </else>
+        </if>
+    </target>
+
+    <!-- Build a single Eclipse plug-in. -->
+    <target name="build-single-plugin" description="Build single QNX Eclipse plug-in.">
+
+        <!-- Local Eclipse plug-in properties -->
+        <tstamp>
+            <format property="plugin.date" pattern="yyyyMMdd" />
+        </tstamp>
+
+        <property name="plugin.version" value="3.0.0" />
+
+        <antcall target="extractImages" />
+
+        <!-- START - GY: Check if this publish contains SVG's, if so, call the rasterizer, if not, keep on moving - 1 of 2 -->
+        <pathconvert property="foundSvg" setonempty="false" pathsep=" ">
+            <path>
+                <fileset dir="${temp}${file.separator}${path}${file.separator}${collection}"
+                    includes="**/*.svg" />
+            </path>
+        </pathconvert>
+
+        <if>
+            <isset property="foundSvg" />
+            <then>
+                <antcall target="rasterizeSVG" />
+            </then>
+        </if>
+
+
+        <!-- PRE-PROCESS START -->
+        <!-- Renames files-->
+        <echo>Starting FileRenamer task for the following folder:
+            ${temp}${file.separator}${path}${file.separator}${collection}${file.separator}</echo>
+        <taskdef name="FileRenamer" classname="com.rim.DITA.preProcess.FileRenamer"
+            classpath="${dita.dir}/plugins/rim.resource.tools/rim_antTools.jar" />
+        <FileRenamer
+            dir="${temp}${file.separator}${path}${file.separator}${collection}${file.separator}"
+            langCode="${langCode}" useFriendlyName="${OG.useFriendlyName}"
+            useLowercase="${OG.useLowercase}" appName="${OG.appName}" qnxPlugin="true" />
+
+        <!-- Renames customproperties file associated with the build ditamap
+             to extract the plug-in name. -->
+        <basename property="ditamapID"
+            file="${temp}${file.separator}${path}${file.separator}${collection}${file.separator}${id}"
+            suffix=".ditamap" />
+
+        <copy
+            file="${temp}${file.separator}${path}${file.separator}${collection}${file.separator}${ditamapID}.customproperties"
+            tofile="${temp}${file.separator}${path}${file.separator}${collection}${file.separator}${ditamapID}.customproperties.xml" />
+
+        <xmlproperty
+            file="${temp}${file.separator}${path}${file.separator}${collection}${file.separator}${ditamapID}.customproperties.xml"
+            collapseAttributes="true" />
+
+        <!-- Iterates through the list of properties (pluginName) 
+             created by the 'xmlproperty' task, to determine plug-in
+             name. -->
+        <echo message="Extract plug-in name for ${id}." />
+        <for list="${customproperties.userproperties.userproperty}" param="pluginName">
+            <sequential>
+                <propertyregex property="last.pluginName"
+                    input="${customproperties.userproperties.userproperty}" regexp=".*,(.*)"
+                    select="\1" />
+                <propertyregex property="originalRelativePath"
+                    input="${customproperties.userproperties.userproperty}" regexp="(.*?),.*"
+                    select="\1" />
+            </sequential>
+        </for>
+
+        <!-- Remove trailing slash from original relative path. -->
+        <propertyregex property="temp.pluginName" input="${originalRelativePath}" regexp="/\z||"
+            replace="" global="true" />
+
+        <property name="OG.plugin" value="${last.pluginName}" />
+        <echo message="All userproperties: ${customproperties.userproperties.userproperty}" />
+        <echo message="Plug-in name: ${last.pluginName}" />
+        <echo message="Temp plug-in name: ${temp.pluginName}" />
+
+        <!-- Move ditamap to plug-in folder -->
+        <copy
+            todir="${temp}${file.separator}${path}${file.separator}${collection}${file.separator}${last.pluginName}">
+            <fileset dir="${temp}${file.separator}${path}${file.separator}${collection}"
+                includes="*.ditamap" />
+        </copy>
+
+        <!-- Manage submaps -->
+        <echo message="Manage submaps" />
+        <if>
+            <not>
+                <contains string="${customproperties.userproperties.userproperty.temp.pluginName}"
+                    substring="${customproperties.userproperties.userproperty.originalId}" />
+            </not>
+            <then>
+                <copy
+                    todir="${temp}${file.separator}${path}${file.separator}${collection}${file.separator}${last.pluginName}">
+                    <fileset
+                        dir="${temp}${file.separator}${path}${file.separator}${collection}${file.separator}${temp.pluginName}"
+                     />
+                </copy>
+            </then>
+        </if>
+
+        <!-- Modify ditamap and submap topic paths -->
+        <antcall description="Modify ditamap paths." target="modify-topic-paths" />
+
+        <!-- Prepare images for output -->
+        <copy todir="${outputdir}">
+            <fileset dir="${temp}${file.separator}${path}${file.separator}${collection}"
+                includes="**/*.image" />
+        </copy>
+
+        <!-- Call target to process safety tables if this is the C Library 
+            Reference. -->
+        <if>
+            <and>
+                <equals arg1="${last.pluginName}" arg2="com.qnx.doc.neutrino.lib_ref" />
+                <equals arg1="${OG.site}" arg2="/native" />
+                <equals arg1="${OG.subsite}" arg2="/core" />
+            </and>
+            <then>
+                <antcall target="process-safety-tables-eclipse" />
+            </then>
+        </if>
+
+        <!-- Call target to build libhover binary file. -->
+        <if>
+            <and>
+                <equals arg1="${qnx.libhover.binary}" arg2="libhover" />
+                <equals arg1="${OG.site}" arg2="/native" />
+                <equals arg1="${OG.subsite}" arg2="/core" />
+            </and>
+            <then>
+                <antcall target="build-libhover-binary" />
+            </then>
+        </if>
+
+        <!-- PRE-PROCESS END -->
+
+        <antcall target="DOST.init">
+            <param name="dita.temp.dir" value="${temp}${file.separator}${path}${file.separator}temp" />
+            <param name="args.input"
+                value="${temp}${file.separator}${path}${file.separator}${collection}${file.separator}${last.pluginName}${file.separator}${id}" />
+            <param name="output.dir"
+                value="${outputdir}${file.separator}${OG.plugin}_${plugin.version}.${plugin.date}" />
+            <param name="args.css" value="style.css" />
+            <param name="args.cssroot"
+                value="${dita.plugin.qnx.resources.plugins.dir}${file.separator}css" />
+            <param name="args.copycss" value="yes" />
+            <param name="transtype" value="eclipsehelp" />
+            <param name="generate.copy.outer" value="1" />
+            <param name="outer.control" value="quiet" />
+            <param name="onlytopic.in.map" value="yes" />
+        </antcall>
+
+        <!-- POST-PROCESS START -->
+
+        <!-- Rearrange plug-in content, depending on plug-in structure. -->
+        <if>
+            <available
+                file="${outputdir}${file.separator}${OG.plugin}_${plugin.version}.${plugin.date}${file.separator}${OG.plugin}" />
+            <then>
+                <!-- Move META-INF folder to plug-in root. -->
+                <move
+                    todir="${outputdir}${file.separator}${OG.plugin}_${plugin.version}.${plugin.date}${file.separator}META-INF">
+                    <fileset
+                        dir="${outputdir}${file.separator}${OG.plugin}_${plugin.version}.${plugin.date}${file.separator}${last.pluginName}${file.separator}META-INF"
+                     />
+                </move>
+
+                <!-- Delete temporary plug-in folder. -->
+                <delete failonerror="false"
+                    dir="${outputdir}${file.separator}${OG.plugin}_${plugin.version}.${plugin.date}${file.separator}${last.pluginName}"
+                    quiet="true" />
+
+                <!-- Copy resources to built plug-in. -->
+                <copy
+                    todir="${outputdir}${file.separator}${OG.plugin}_${plugin.version}.${plugin.date}"
+                    failonerror="true" overwrite="true" includeEmptyDirs="true">
+                    <fileset dir="${dita.plugin.qnx.resources.plugins.dir}${file.separator}css">
+                        <include name="**/commonltr.css" />
+                        <include name="**/qnxdoc.css" />
+                    </fileset>
+                </copy>
+            </then>
+        </if>
+
+        <!-- Create doc.zip archive for Eclipse plug-in. -->
+        <echo message="Create doc.zip archive for ${last.pluginName}" />
+        <delete failonerror="false"
+            file="${outputdir}${file.separator}${OG.plugin}_${plugin.version}.${plugin.date}${file.separator}doc.zip"
+            quiet="true" />
+        <zip basedir="${outputdir}${file.separator}${OG.plugin}_${plugin.version}.${plugin.date}"
+            destfile="${outputdir}${file.separator}${OG.plugin}_${plugin.version}.${plugin.date}${file.separator}doc.zip"
+            excludes="images/**, META-INF/**, *.xml, *.css, *.properties, *.list, *.libhover"
+            update="yes" />
+
+        <delete includeemptydirs="yes">
+            <fileset
+                dir="${outputdir}${file.separator}${OG.plugin}_${plugin.version}.${plugin.date}${file.separator}"
+                excludes="images/**, META-INF/**, *.xml, *.css, *.properties, *.list, *.html, *.zip *.libhover"
+             />
+        </delete>
+
+
+
+        <!-- Replace placeholder values in plugin.properties file. -->
+        <replaceregexp
+            file="${outputdir}${file.separator}${OG.plugin}_${plugin.version}.${plugin.date}${file.separator}META-INF${file.separator}MANIFEST.MF"
+            encoding="utf-8" flags="g" match="%name" replace="${OG.plugin}" />
+        <replaceregexp
+            file="${outputdir}${file.separator}${OG.plugin}_${plugin.version}.${plugin.date}${file.separator}META-INF${file.separator}MANIFEST.MF"
+            encoding="utf-8" flags="g" match="Bundle-Version: 0.0.0"
+            replace="Bundle-Version: 3.0.0.${plugin.date}" />
+        <replaceregexp
+            file="${outputdir}${file.separator}${OG.plugin}_${plugin.version}.${plugin.date}${file.separator}META-INF${file.separator}MANIFEST.MF"
+            encoding="utf-8" flags="g" match="Manifest-Version: 1.0"
+            replace="Manifest-Version: 3.0.0" />
+
+        <move
+            todir="${outputdir}${file.separator}${OG.plugin}_${plugin.version}.${plugin.date}/images">
+            <fileset dir="${outputdir}">
+                <include name="**/*.tiff" />
+                <include name="**/*.jpg" />
+                <include name="**/*.jpeg" />
+                <include name="**/*.png" />
+                <include name="**/*.gif" />
+                <include name="**/*.svg" />
+            </fileset>
+        </move>
+
+        <!-- POST-PROCESS END -->
+
+    </target>
+
+    <!-- Build multiple Eclipse plug-ins. 
+         NOTE: This target uses the Antcontrib 'var' task, so some properties
+         are not immutable. -->
+    <target name="build-multiple-plugins" description="Build multiple QNX Eclipse plugins">
+
+        <!-- Renames indexcontent file associated with build ditamap to extract
+             submap IDs. -->
+        <echo message="Renaming indexcontent file" />
+        <copy
+            file="${temp}${file.separator}${path}${file.separator}${collection}${file.separator}${id.noextension}.indexedcontent"
+            tofile="${temp}${file.separator}${path}${file.separator}${collection}${file.separator}${id.noextension}.indexedcontent.xml" />
+
+        <xmlproperty
+            file="${temp}${file.separator}${path}${file.separator}${collection}${file.separator}${id.noextension}.indexedcontent.xml"
+            collapseAttributes="true" />
+
+        <!-- Iterates through the list of properties (mapID) created by the 
+             'xmlproperty' task, and builds a plug-in for each submap. -->
+        <for list="${map.topicref.href}" param="mapID">
+            <sequential>
+
+                <!-- Local Eclipse plug-in properties -->
+                <tstamp>
+                    <format property="plugin.date" pattern="yyyyMMdd" />
+                </tstamp>
+
+                <property name="plugin.version" value="3.0.0" />
+
+                <!--<antcall target="extractImages" />-->
+
+                <!-- START - GY: Check if this publish contains SVG's, if so, call the rasterizer, if not, keep on moving - 1 of 2 -->
+                <pathconvert property="foundSvg" setonempty="false" pathsep=" ">
+                    <path>
+                        <fileset dir="${temp}${file.separator}${path}${file.separator}${collection}"
+                            includes="**/*.svg" />
+                    </path>
+                </pathconvert>
+
+                <echo message="Property foundSvg: ${foundSvg}" />
+
+                <if>
+                    <isset property="foundSvg" />
+                    <then>
+                        <antcall target="rasterizeSVG" />
+                    </then>
+                </if>
+
+
+                <!-- PRE-PROCESS START -->
+                <!-- Renames files-->
+                <echo>Starting FileRenamer task for the following folder:
+                    ${temp}${file.separator}${path}${file.separator}${collection}${file.separator}</echo>
+                <taskdef name="FileRenamer" classname="com.rim.DITA.preProcess.FileRenamer"
+                    classpath="${dita.dir}/plugins/rim.resource.tools/rim_antTools.jar" />
+                <FileRenamer
+                    dir="${temp}${file.separator}${path}${file.separator}${collection}${file.separator}"
+                    langCode="${langCode}" useFriendlyName="${OG.useFriendlyName}"
+                    useLowercase="${OG.useLowercase}" appName="${OG.appName}" qnxPlugin="true" />
+
+                <!-- Renames customproperties file associated with the current submap to extract
+                     plug-in names. -->
+                <echo
+                    message="Rename customproperties file associated with the current submap, @{mapID}." />
+                <var name="ditamapID" unset="true" />
+                <basename property="ditamapID"
+                    file="${temp}${file.separator}${path}${file.separator}${collection}${file.separator}@{mapID}"
+                    suffix=".ditamap" />
+
+                <copy
+                    file="${temp}${file.separator}${path}${file.separator}${collection}${file.separator}${ditamapID}.customproperties"
+                    tofile="${temp}${file.separator}${path}${file.separator}${collection}${file.separator}${ditamapID}.customproperties.xml" />
+
+                <xmlproperty
+                    file="${temp}${file.separator}${path}${file.separator}${collection}${file.separator}${ditamapID}.customproperties.xml"
+                    collapseAttributes="true" />
+
+                <!-- Iterates through the list of properties (pluginName) 
+                     created by the 'xmlproperty' task, to determine plug-in
+                     name for current submap. -->
+                <echo message="Extract plug-in name for the current submap, @{mapID}." />
+                <for list="${customproperties.userproperties.userproperty}" param="pluginName">
+                    <sequential>
+                        <propertyregex property="last.pluginName"
+                            input="${customproperties.userproperties.userproperty}" regexp=".*,(.*)"
+                            select="\1" />
+                        <propertyregex property="originalRelativePath"
+                            input="${customproperties.userproperties.userproperty}"
+                            regexp="(.*?),.*" select="\1" />
+                    </sequential>
+                </for>
+
+                <!-- Remove trailing slash from original relative path. -->
+                <var name="temp.pluginName" unset="true" />
+                <propertyregex property="temp.pluginName" input="${originalRelativePath}"
+                    regexp="/\z||" replace="" global="true" />
+
+                <var name="OG.plugin" unset="true" />
+                <property name="OG.plugin" value="${last.pluginName}" />
+
+                <var name="last.pluginName" unset="true" />
+                <var name="originalRelativePath" unset="true" />
+                <var name="customproperties.userproperties.userproperty" unset="true" />
+
+                <!-- Troubleshooting. -->
+                <echo message="XXX Troubleshooting XXXXXXXXXXXXXXXXXXXXXXXXXXXXX" />
+                <echo message="Current map:                     @{mapID}" />
+                <echo message="Current map name (no extension): ${ditamapID}" />
+                <echo message="Current plug-in name:            ${OG.plugin}" />
+                <echo message="Temp plug-in name:               ${temp.pluginName}" />
+                <echo message="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" />
+
+                <!-- Move ditamap to plug-in folder -->
+                <copy
+                    todir="${temp}${file.separator}${path}${file.separator}${collection}${file.separator}${OG.plugin}">
+                    <fileset dir="${temp}${file.separator}${path}${file.separator}${collection}"
+                        includes="*.ditamap" />
+                </copy>
+
+                <!-- Manage submaps -->
+                <echo message="Manage submaps" />
+                <if>
+                    <not>
+                        <contains
+                            string="${customproperties.userproperties.userproperty.temp.pluginName}"
+                            substring="${customproperties.userproperties.userproperty.originalId}"
+                         />
+                    </not>
+                    <then>
+                        <copy
+                            todir="${temp}${file.separator}${path}${file.separator}${collection}${file.separator}${OG.plugin}">
+                            <fileset
+                                dir="${temp}${file.separator}${path}${file.separator}${collection}${file.separator}${temp.pluginName}"
+                             />
+                        </copy>
+                    </then>
+                </if>
+
+                <!-- Modify ditamap and submap topic paths -->
+                <antcall description="Modify ditamap paths." target="modify-topic-paths" />
+
+                <!-- prepare images for output -->
+                <copy todir="${outputdir}">
+                    <fileset dir="${temp}${file.separator}${path}${file.separator}${collection}"
+                        includes="**/*.image" />
+                </copy>
+
+                <!-- Call target to process safety tables if this is the C Library 
+                     Reference. -->
+                <if>
+                    <and>
+                        <equals arg1="${OG.plugin}" arg2="com.qnx.doc.neutrino.lib_ref" />
+                        <equals arg1="${OG.site}" arg2="/native" />
+                        <equals arg1="${OG.subsite}" arg2="/core" />
+                    </and>
+                    <then>
+                        <antcall target="process-safety-tables-eclipse" />
+                    </then>
+                </if>
+
+                <!-- PRE-PROCESS END -->
+
+                <echo message="XXX Troubleshooting DOST XXXXXXXXXXXXXXXXXXXXXXXXX" />
+                <echo message="DOST start" />
+                <echo
+                    message="args.input: ${temp}${file.separator}${path}${file.separator}${collection}${file.separator}${OG.plugin}${file.separator}@{mapID}" />
+                <echo message="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" />
+
+                <antcall target="DOST.init">
+                    <param name="dita.temp.dir"
+                        value="${temp}${file.separator}${path}${file.separator}temp" />
+                    <param name="args.input"
+                        value="${temp}${file.separator}${path}${file.separator}${collection}${file.separator}${OG.plugin}${file.separator}@{mapID}" />
+                    <param name="output.dir"
+                        value="${outputdir}${file.separator}${OG.plugin}_${plugin.version}.${plugin.date}" />
+                    <param name="args.css" value="style.css" />
+                    <param name="args.cssroot"
+                        value="${dita.plugin.qnx.resources.plugins.dir}${file.separator}css" />
+                    <param name="args.copycss" value="yes" />
+                    <param name="transtype" value="eclipsehelp" />
+                    <param name="generate.copy.outer" value="1" />
+                    <param name="outer.control" value="quiet" />
+                    <param name="onlytopic.in.map" value="yes" />
+                </antcall>
+
+                <echo message="DOST end" />
+
+                <!-- POST-PROCESS START -->
+
+                <!-- Rearrange plug-in content, depending on plug-in structure. -->
+                <if>
+                    <available
+                        file="${outputdir}${file.separator}${OG.plugin}_${plugin.version}.${plugin.date}${file.separator}${OG.plugin}" />
+                    <then>
+                        <!-- Move META-INF folder to plug-in root. -->
+                        <move
+                            todir="${outputdir}${file.separator}${OG.plugin}_${plugin.version}.${plugin.date}${file.separator}META-INF">
+                            <fileset
+                                dir="${outputdir}${file.separator}${OG.plugin}_${plugin.version}.${plugin.date}${file.separator}${OG.plugin}${file.separator}META-INF"
+                             />
+                        </move>
+
+                        <!-- Delete temporary plug-in folder. -->
+                        <delete failonerror="false"
+                            dir="${outputdir}${file.separator}${OG.plugin}_${plugin.version}.${plugin.date}${file.separator}${OG.plugin}"
+                            quiet="true" />
+
+                        <!-- Copy resources to built plug-in. -->
+                        <copy
+                            todir="${outputdir}${file.separator}${OG.plugin}_${plugin.version}.${plugin.date}"
+                            failonerror="true" overwrite="true" includeEmptyDirs="true">
+                            <fileset
+                                dir="${dita.plugin.qnx.resources.plugins.dir}${file.separator}css">
+                                <include name="**/commonltr.css" />
+                                <include name="**/qnxdoc.css" />
+                            </fileset>
+                        </copy>
+                    </then>
+                </if>
+
+                <!-- Create doc.zip archive for Eclipse plug-in. -->
+                <echo message="Create doc.zip archive for ${OG.plugin}" />
+                <delete failonerror="false"
+                    file="${outputdir}${file.separator}${OG.plugin}_${plugin.version}.${plugin.date}${file.separator}doc.zip"
+                    quiet="true" />
+                <zip
+                    basedir="${outputdir}${file.separator}${OG.plugin}_${plugin.version}.${plugin.date}"
+                    destfile="${outputdir}${file.separator}${OG.plugin}_${plugin.version}.${plugin.date}${file.separator}doc.zip"
+                    excludes="images/**, META-INF/**, *.xml, *.css, *.properties, *.list, *.libhover"
+                    update="yes" />
+
+                <delete includeemptydirs="yes">
+                    <fileset
+                        dir="${outputdir}${file.separator}${OG.plugin}_${plugin.version}.${plugin.date}${file.separator}"
+                        excludes="images/**, META-INF/**, *.xml, *.css, *.properties, *.list, *.html, *.zip *.libhover"
+                     />
+                </delete>
+
+                <!-- Replace placeholder values in plugin.properties file. -->
+                <replaceregexp
+                    file="${outputdir}${file.separator}${OG.plugin}_${plugin.version}.${plugin.date}${file.separator}META-INF${file.separator}MANIFEST.MF"
+                    encoding="utf-8" flags="g" match="%name" replace="${OG.plugin}" />
+                <replaceregexp
+                    file="${outputdir}${file.separator}${OG.plugin}_${plugin.version}.${plugin.date}${file.separator}META-INF${file.separator}MANIFEST.MF"
+                    encoding="utf-8" flags="g" match="Bundle-Version: 0.0.0"
+                    replace="Bundle-Version: 3.0.0.${plugin.date}" />
+                <replaceregexp
+                    file="${outputdir}${file.separator}${OG.plugin}_${plugin.version}.${plugin.date}${file.separator}META-INF${file.separator}MANIFEST.MF"
+                    encoding="utf-8" flags="g" match="Manifest-Version: 1.0"
+                    replace="Manifest-Version: 3.0.0" />
+
+                <move
+                    todir="${outputdir}${file.separator}${OG.plugin}_${plugin.version}.${plugin.date}/images">
+                    <fileset dir="${outputdir}">
+                        <include name="**/*.tiff" />
+                        <include name="**/*.jpg" />
+                        <include name="**/*.jpeg" />
+                        <include name="**/*.png" />
+                        <include name="**/*.gif" />
+                        <include name="**/*.svg" />
+                    </fileset>
+                </move>
+
+                <!-- Clear mapID in preparation for processing next plug-in.  -->
+                <var name="mapID" unset="true" />
+
+                <!-- POST-PROCESS END -->
+
+            </sequential>
+        </for>
+    </target>
+
+    <!-- Removes plug-in name from ditamap href topic paths. -->
+    <target name="modify-topic-paths"
+        description="Remove plug-in name from ditamap href topic paths.">
+
+        <mkdir
+            dir="${temp}${file.separator}${path}${file.separator}${collection}${file.separator}${OG.plugin}${file.separator}tmp" />
+
+        <xslt
+            basedir="${temp}${file.separator}${path}${file.separator}${collection}${file.separator}${OG.plugin}"
+            destdir="${temp}${file.separator}${path}${file.separator}${collection}${file.separator}${OG.plugin}${file.separator}tmp"
+            extension=".ditamap" includes="**/*.ditamap" excludes="**/*.xml"
+            style="${dita.plugin.qnx.xml.qnx.eclipse.dir}${file.separator}xsl${file.separator}preparemaps.xsl"> </xslt>
+
+        <copy
+            todir="${temp}${file.separator}${path}${file.separator}${collection}${file.separator}${OG.plugin}"
+            overwrite="true">
+            <fileset
+                dir="${temp}${file.separator}${path}${file.separator}${collection}${file.separator}${OG.plugin}${file.separator}tmp"
+                includes="**/*.ditamap" />
+        </copy>
+
+    </target>
+
+    <!-- [dwh] Added target to pre-process safety tables for C Library reference. -->
+    <target name="process-safety-tables-eclipse"
+        description="Create safety tables for C Library reference.">
+
+        <!-- 1. For C library reference only
+	         2. Create staging directories
+	         3. Create list of NDK-only topics
+	         4. Concatenate topics in the list
+	         5. Preprocess hrefs
+	         6. Generate safety tables. -->
+
+        <property name="docsetType" value="NDK" />
+        <property name="staging_1"
+            value="${temp}${file.separator}${path}${file.separator}${collection}${file.separator}${last.pluginName}${file.separator}staging_1" />
+        <property name="staging_2"
+            value="${temp}${file.separator}${path}${file.separator}${collection}${file.separator}${last.pluginName}${file.separator}staging_2" />
+        <property name="staging_3"
+            value="${temp}${file.separator}${path}${file.separator}${collection}${file.separator}${last.pluginName}${file.separator}staging_3" />
+
+        <echo message="Creating staging directories ..." />
+        <mkdir dir="${staging_1}" />
+        <copy flatten="true" todir="${staging_1}">
+            <fileset
+                dir="${temp}${file.separator}${path}${file.separator}${collection}${file.separator}${last.pluginName}${file.separator}topic${file.separator}">
+                <include name="*/**" />
+                <exclude name="*/*.html" />
+                <exclude name="*/*.sgm" />
+                <exclude name="*" />
+            </fileset>
+        </copy>
+        <mkdir dir="${staging_2}" />
+        <mkdir dir="${staging_3}" />
+
+        <!-- Convert relative paths to absolute path  -->
+        <property name="listfile.abspath"
+            location="${temp}${file.separator}${path}${file.separator}content${file.separator}authoring${file.separator}${last.pluginName}${file.separator}staging_1${file.separator}" />
+        <property name="sfty.table.outdir"
+            location="${temp}${file.separator}${path}${file.separator}content${file.separator}authoring${file.separator}${last.pluginName}${file.separator}staging_3" />
+
+        <echo message="Creating list of NDK topics ..." />
+        <xslt
+            in="${temp}${file.separator}${path}${file.separator}${collection}${file.separator}${id}"
+            out="${staging_2}${file.separator}list.xml"
+            style="${dita.plugin.rim.xhtml.microsite.dir}${file.separator}xsl${file.separator}safety_table_list.xsl">
+            <param expression="${docsetType}" name="docSetType" />
+            <param expression="${listfile.abspath}${file.separator}" name="listPath" />
+        </xslt>
+
+        <echo message="Concatenating all topics in list ..." />
+        <xslt in="${staging_2}${file.separator}list.xml"
+            out="${staging_2}${file.separator}concatenated(1)_data.xml"
+            style="${dita.plugin.rim.xhtml.microsite.dir}${file.separator}xsl${file.separator}concatenate_files.xsl"> </xslt>
+
+        <echo message="Preprocessing hrefs ..." />
+        <xslt in="${staging_2}${file.separator}concatenated(1)_data.xml"
+            out="${staging_2}${file.separator}concatenated_data.xml"
+            style="${dita.plugin.rim.xhtml.microsite.dir}${file.separator}xsl${file.separator}prep_hrefs.xsl"> </xslt>
+
+        <echo message="Generating safety tables ..." />
+        <xslt in="${staging_2}${file.separator}concatenated_data.xml"
+            out="${staging_2}${file.separator}dummy.xml"
+            style="${dita.plugin.rim.xhtml.microsite.dir}${file.separator}xsl${file.separator}safety_table.xsl">
+            <param expression="${sfty.table.outdir}" name="outdir" />
+        </xslt>
+
+        <echo message="Copying full_saftey tables to topic directory." />
+        <copy flatten="true"
+            todir="${temp}${file.separator}${path}${file.separator}${collection}${file.separator}${last.pluginName}${file.separator}topic"
+            overwrite="true">
+            <fileset dir="${staging_3}">
+                <include name="*/**" />
+            </fileset>
+        </copy>
+
+        <echo message="Deleting staging directories ..." />
+        <delete includeEmptyDirs="true">
+            <fileset dir="${staging_1}" />
+            <fileset dir="${staging_2}" />
+            <fileset dir="${staging_3}" />
+        </delete>
+
+    </target>
+
+    <!-- [dwh:Sep.2013] Added target to build libhover binary for Eclipse reference plug-ins. -->
+    <target name="build-libhover-binary"
+        description="Creates binary file for libhover context-sensitive help.">
+
+        <!-- 1. For reference content only.
+	         2. Create staging directories.
+	         3. Copy DITA topics to stging 1.  
+	         4. Apply libhover.xsl to DITA reference 
+	            topics in stging 1; direct output to stging 2.
+	         5. Concatenate libhover files to create input.xml
+	            in root of plug-in.
+	         6. Create libhover binary; input.xml becomes 
+	            output.libhover. -->
+
+        <echo message="*****************************************************************" />
+        <echo message="* Create libhover context-sensitive help binary." />
+        <echo message="*****************************************************************" />
+
+        <property name="staging_1"
+            value="${temp}${file.separator}${path}${file.separator}${collection}${file.separator}${last.pluginName}${file.separator}staging_1" />
+        <property name="staging_2"
+            value="${temp}${file.separator}${path}${file.separator}${collection}${file.separator}${last.pluginName}${file.separator}staging_2" />
+        <property name="staging_3"
+            value="${temp}${file.separator}${path}${file.separator}${collection}${file.separator}${last.pluginName}${file.separator}staging_3" />
+
+        <property name="listfile.abspath"
+            location="${temp}${file.separator}${path}${file.separator}content${file.separator}authoring${file.separator}${last.pluginName}${file.separator}staging_2" />
+        
+        <echo message="Creating staging directories ..." />
+        <mkdir dir="${staging_1}" />
+        <copy flatten="true" todir="${staging_1}">
+            <fileset
+                dir="${temp}${file.separator}${path}${file.separator}${collection}${file.separator}${last.pluginName}${file.separator}topic${file.separator}">
+                <include name="*/**" />
+                <include name="*.xml" />
+                <exclude name="*/*.html" />
+                <exclude name="*/*.sgm" />
+                <exclude name="**/about*" />
+                <exclude name="**/overview*" />
+                <exclude name="**/*overview*" />
+                <exclude name="**/SC_TYPEINFO*" />
+                <!--<exclude name="*" />-->
+            </fileset>
+        </copy>
+        <mkdir dir="${staging_2}" />
+        <mkdir dir="${staging_3}" />
+
+        <echo message="Processing files in staging directory -- creating libhover topics ..." />
+        <xslt basedir="${staging_1}" destdir="${staging_2}" extension=".xml" includes="**/*.xml"
+            excludes="plugin.xml, index.xml"
+            style="${dita.plugin.qnx.xml.qnx.eclipse.dir}${file.separator}xsl${file.separator}libhover.xsl"> </xslt>
+
+        <echo message="Concatenating files  ..."/>
+        <propertyregex property="libhover.src"
+            input="${listfile.abspath}"
+            regexp="\\"
+            replace="/"
+            global="true"
+            defaultValue="${listfile.abspath}" />
+        <xslt basedir="${staging_2}"
+            in="${dita.plugin.qnx.xml.qnx.eclipse.dir}${file.separator}xsl${file.separator}concatenate_libhover.xsl"
+            out="${staging_3}${file.separator}input.xml"
+            style="${dita.plugin.qnx.xml.qnx.eclipse.dir}${file.separator}xsl${file.separator}concatenate_libhover.xsl">
+            <param expression="${libhover.src}/" name="indir" />
+        </xslt>
+        
+        <echo message="Deleting staging directories ..." />
+        <delete includeEmptyDirs="true">
+            <fileset dir="${project.dir}${file.separator}staging_1"/>
+            <fileset dir="${project.dir}${file.separator}staging_2"/>
+            <fileset dir="${project.dir}${file.separator}staging_3"/>
+        </delete>
+        
+        <echo message="Create libhover binary file." />
+        <property name="output.path" location="${temp}${file.separator}${path}${file.separator}${collection}${file.separator}${last.pluginName}${file.separator}output.libhover"/>
+        <property name="input.path" location="${staging_3}${file.separator}input.xml"/>
+        
+        <java classname="org.eclipse.linuxtools.cdt.libhover.utils.BuildFunctionInfos">
+            <classpath>
+                <pathelement location="${dita.plugin.qnx.xml.qnx.eclipse.dir}${file.separator}lib${file.separator}BuildFunctionInfos.jar"/>
+                <pathelement path="${java.class.path}"/>
+                <!--<pathelement path="${env.CLASSPATH}"/>-->
+            </classpath>
+            <arg value="${input.path}"/>
+            <arg value="${output.path}"/>
+        </java>
+
+    </target>
+
+
+
+
+</project>

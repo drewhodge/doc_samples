@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ========================================================== -->
+<!-- Licensed Materials - Property of IBM                       -->
+<!-- (c) Copyright IBM Corp. 2004, 2005. All Rights Reserved.         -->
+<!-- ========================================================== -->
+<?NLS TYPE="org.eclipse.help.toc"?>
+
+<toc label="Creating a DoDAF model" topic="topics/tcreatedodafmod.html">
+   <topic label="DoDAF feature overview" href="topics/cdodafoverview.html"/>
+   <topic label="Enabling DoDAF modeling capabilities" href="topics/tenabledodaf.html"/>
+   <topic label="Creating a DoDAF modeling project" href="topics/tcreatedodafproj.html"/>
+   <topic label="Creating DoDAF Operational View products" href="topics/tdodafopviewprods.html"/>
+   <topic label="Creating DoDAF Systems View products" href="topics/tdodafsysviewprods.html"/>
+</toc>

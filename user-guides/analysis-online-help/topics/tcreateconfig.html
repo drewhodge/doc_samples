@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en-us" xml:lang="en-us">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="security" content="public" />
+<meta name="Robots" content="index,follow" />
+<meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
+<meta name="DC.Type" content="task" />
+<meta name="DC.Title" content="Creating and editing static analysis configurations" />
+<meta name="abstract" content="In IBM Rational products, you can create an analysis configuration that specifies the domain, rule categories, and rules with which to analyze your resources." />
+<meta name="description" content="In IBM Rational products, you can create an analysis configuration that specifies the domain, rule categories, and rules with which to analyze your resources." />
+<meta name="DC.subject" content="static analysis, configurations, analysis, static" />
+<meta name="keywords" content="static analysis, configurations, analysis, static" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tanalyzesourcecode.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/cstaticanalysis.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/canalysisrules.html" />
+<meta name="copyright" content="(C) Copyright IBM Corporation 2004 2007" />
+<meta name="DC.Rights.Owner" content="(C) Copyright IBM Corporation 2004 2007" />
+<meta name="DC.Format" content="XHTML" />
+<meta name="DC.Identifier" content="tcreateanalysisconfig" />
+<meta name="DC.Language" content="en-us" />
+<!-- All rights reserved. Licensed Materials Property of IBM -->
+<!-- US Government Users Restricted Rights -->
+<!-- Use, duplication or disclosure restricted by -->
+<!-- GSA ADP Schedule Contract with IBM Corp. -->
+<link rel="stylesheet" type="text/css" href="../ibmdita.css" />
+<link rel="stylesheet" type="text/css" href="../swg_info_common.css" />
+<link rel="Start" href="../topics/tanalyzesourcecode.html" />
+<title>Creating and editing static analysis configurations</title>
+</head>
+<body id="tcreateanalysisconfig"><a name="tcreateanalysisconfig"><!-- --></a>
+<h1 class="id_title_id">Creating and editing static analysis configurations</h1>
+<div><p class="id_shortdesc_id"><em class="anchor_top_anchor"></em>In IBM<sup>®</sup> Rational<sup>®</sup> products,
+you can create an analysis configuration that specifies the domain, rule categories,
+and rules with which to analyze your resources. </p>
+<div class="id_prereq_id">To create an analysis configuration, you
+must be working in a perspective that supports analysis capabilities. <em class="anchor_prereq_anchor"></em></div>
+<div class="section">When you create an analysis configuration, you determine the type
+of analysis that you want to perform, its scope, and the particular rules
+to apply to the resources. <p>You can analyze the resources in an entire workspace,
+in a resource working set that you define, or in a project. By analyzing a
+resource working set, you minimize the code base to be analyzed and decrease
+the time the analysis takes. Your working set might consist of only the most
+relevant code or it might be a smaller subset of the code in your workspace.</p>
+<p>To
+create an analysis configuration:</p>
+</div>
+<ol><li class="stepexpand"><span>Click <span class="menucascade"><span class="uicontrol">Run</span> &gt; <span class="uicontrol">Analysis</span></span>.</span></li>
+<li class="stepexpand"><span>In the <span class="wintitle">Analysis</span> window, in the <span class="wintitle">Configurations</span> pane,
+click <span class="uicontrol">Analysis</span> and click <span class="uicontrol">New</span>.</span></li>
+<li class="stepexpand"><span>In the <span class="uicontrol">Name</span> field, type a name for the configuration.</span></li>
+<li class="stepexpand"><span>To set the scope of your analysis, click the <span class="uicontrol">Scope</span> tab
+and complete one of the following steps:</span><ul><li>To analyze the resources in an entire workspace, click <span class="uicontrol">Analyze
+entire workspace</span>. The rules that you select on the <span class="wintitle">Rules</span> page
+are applied to all the resources in your workspace.</li>
+<li>To analyze the resources in a resource working set that you have defined
+previously, click <span class="uicontrol">Analyze a resource working set</span>. The
+rules that you select on the <span class="wintitle">Rules</span> page are applied to
+a specific set of projects, folders, or files in your workspace.</li>
+<li>To analyze projects in your workspace, click <span class="uicontrol">Analyze selected
+projects</span>. The rules that you select on the <span class="wintitle">Rules</span> page
+are applied to the resources in the project you select.</li>
+</ul>
+</li>
+<li class="stepexpand"><span>To specify the rule categories, rules, or rule sets to apply during
+the analysis, click the <span class="uicontrol">Rules</span> tab and complete one
+of the following steps:</span><ul><li>In the <span class="uicontrol">Analysis domains and rules</span> field, expand
+the tree and select providers, rule categories, and rules. To select all the
+rules defined by the provider or rule category, select a top-level provider
+or rule category. </li>
+<li>To import a file that describes a custom rule set, click <span class="uicontrol">Import</span>. </li>
+<li>In the <span class="uicontrol">Rule sets</span> field, type the name of a
+custom rule set, or click a defined rule set; then click <span class="uicontrol">Set</span> to
+configure the providers, rule categories, and rules to perform a specific
+analysis.</li>
+</ul>
+</li>
+<li class="stepexpand">Optional: <span>To show any configuration or additional information
+that might exist for a rule, and to change the severity rating and other rule
+parameters, click the rule; then click <span class="uicontrol">Details</span>.</span></li>
+</ol>
+<div class="section">The <span class="wintitle">Configurations</span> pane shows the new analysis
+configuration. </div>
+<div class="id_postreq_id"><em class="anchor_postreq_anchor"></em> <em class="anchor_bottom_anchor"></em></div>
+</div>
+<div>
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a href="../topics/tanalyzesourcecode.html" title="In IBM Rational products, the analysis framework provides static analysis capabilities to integrate several analysis domains. Each domain can supply tools that provide different forms of analysis, such as code review or architectural discovery, but the interface for the tools remains consistent.">Analyzing source code through static analysis</a></div>
+</div>
+<div class="relconcepts"><strong>Related concepts</strong><br />
+<div><a href="../topics/cstaticanalysis.html" title="In IBM Rational products, you can use the static analysis capabilities to analyze the components and resources of an application without having to run the application.">Static analysis</a></div>
+<div><a href="../topics/canalysisrules.html" title="Rules are the smallest building blocks of a static analysis configuration. Each analysis configuration applies different rules, or sets of rules, that define the conditions that generate results and that assess the quality, or determine the structure, of resources. A rule category is a collection of analysis rules, or other categories, that focuses on a particular aspect of standards compliance, or on an accepted practice.">Rules and rule categories for static analysis</a></div>
+</div>
+</div></body>
+</html>

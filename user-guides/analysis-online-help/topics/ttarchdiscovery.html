@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en-us" xml:lang="en-us">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="security" content="public" />
+<meta name="Robots" content="index,follow" />
+<meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
+<meta name="DC.Type" content="task" />
+<meta name="DC.Title" content="Detecting patterns in Java source code" />
+<meta name="abstract" content="You can learn about the architecture of an application by identifying patterns in an application's code and by studying how the components in patterns are connected. The process of such identification and study is called architectural discovery." />
+<meta name="description" content="You can learn about the architecture of an application by identifying patterns in an application's code and by studying how the components in patterns are connected. The process of such identification and study is called architectural discovery." />
+<meta name="DC.subject" content="architectural discovery, overview, patterns, detecting, Java source code" />
+<meta name="keywords" content="architectural discovery, overview, patterns, detecting, Java source code" />
+<meta name="DC.Relation" scheme="URI" content="../topics/trunpatternanalysis.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tviewpatternanalysis.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/rarchdiscref.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/cpatterns.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/rarchdiscref.html" />
+<meta name="copyright" content="(C) Copyright IBM Corporation 2004 2007" />
+<meta name="DC.Rights.Owner" content="(C) Copyright IBM Corporation 2004 2007" />
+<meta name="DC.Format" content="XHTML" />
+<meta name="DC.Identifier" content="tarchdiscovery" />
+<meta name="DC.Language" content="en-us" />
+<!-- All rights reserved. Licensed Materials Property of IBM -->
+<!-- US Government Users Restricted Rights -->
+<!-- Use, duplication or disclosure restricted by -->
+<!-- GSA ADP Schedule Contract with IBM Corp. -->
+<link rel="stylesheet" type="text/css" href="../ibmdita.css" />
+<link rel="stylesheet" type="text/css" href="../swg_info_common.css" />
+<title>Detecting patterns in Java source code</title>
+</head>
+<body id="tarchdiscovery"><a name="tarchdiscovery"><!-- --></a>
+<h1 class="topictitle1">Detecting patterns in Java source code</h1>
+<div><p>You can learn about the architecture of an application by identifying
+patterns in an application's code and by studying how the components in patterns
+are connected. The process of such identification and study is called architectural
+discovery.</p>
+<div class="section"><p>You can run an architectural discovery analysis on all the code
+in a workspace, on a resource working set of code, or on a project that you
+specify. An architectural discovery analysis identifies a particular design
+pattern by looking for code that constitutes the components, such as classes,
+interfaces, and packages, that form the pattern. To study the relationships
+and dependencies in detected patterns, you can open visual representations
+of the patterns.</p>
+<p>Running an architectural discovery analysis on an application's
+code can provide the following benefits:</p>
+<ul><li>Reduce the learning curve for understanding underlying patterns in an
+existing software architecture<p>This approach helps especially when you work
+with unfamiliar code. By studying visual representations, you can review classes
+and interfaces that constitute design patterns to become familiar with the
+architecture of an application. For example, you can study visualizations
+of an abstraction in one diagram and an inheritance tree in another.</p>
+</li>
+<li>Help you make accurate deductions about an application <p>For example,
+in the Factory Method pattern, a class is used to create other classes. So,
+when you see a class in a visualization showing the Factory Method pattern,
+you know that the class produces other classes.</p>
+</li>
+<li>Show the structural patterns and antipatterns that compose the software
+application<p>This approach helps you detect good coding patterns to retain
+and follow as well as coding patterns to avoid and correct.</p>
+</li>
+</ul>
+<p>Automated architectural discovery is an efficient way to gain an understanding
+of how an application is designed.</p>
+</div>
+</div>
+<div>
+<ul class="ullinks">
+<li class="ulchildlink"><strong><a href="../topics/trunpatternanalysis.html">Running an architectural discovery analysis</a></strong><br />
+You can run an architectural discovery analysis on Java™ source code with an analysis configuration that uses the Architectural Discovery for Java domain, its rule categories, and rules. In the analysis configuration, you can also determine the scope of an analysis, the source code that you want to analyze.</li>
+<li class="ulchildlink"><strong><a href="../topics/tviewpatternanalysis.html">Viewing architectural discovery results</a></strong><br />
+You can view the results of an architectural discovery analysis in the <span class="wintitle">Analysis Results</span> view. You can filter the results to display results that correspond to each rule in your analysis configuration, or only those results that do not conform to a particular rule. From the <span class="wintitle">Analysis Results</span> view, you can also open results to study the relationships between the components of your code.</li>
+<li class="ulchildlink"><strong><a href="../topics/rarchdiscref.html">Architectural discovery patterns</a></strong><br />
+The Architectural Discovery for Java domain comprises four rule categories that contain the rules for identifying patterns and antipatterns in Java source code. This section contains topics that describe the patterns that an architectural discovery analysis can detect automatically.</li>
+</ul>
+<div class="relconcepts"><strong>Related concepts</strong><br />
+<div><a href="../topics/cpatterns.html" title="When you run an architectural discovery analysis, you can choose to identify several patterns in your Java source code. Each pattern is a commonly seen solution or pitfall in designing and writing software.">Patterns in architectural discovery</a></div>
+</div>
+<div class="relref"><strong>Related reference</strong><br />
+<div><a href="../topics/rarchdiscref.html" title="The Architectural Discovery for Java domain comprises four rule categories that contain the rules for identifying patterns and antipatterns in Java source code. This section contains topics that describe the patterns that an architectural discovery analysis can detect automatically.">Architectural discovery patterns</a></div>
+</div>
+</div></body>
+</html>

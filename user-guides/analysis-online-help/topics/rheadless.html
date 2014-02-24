@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en-us" xml:lang="en-us">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="security" content="public" />
+<meta name="Robots" content="index,follow" />
+<meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
+<meta name="DC.Type" content="reference" />
+<meta name="DC.Title" content="Command line code review reference" />
+<meta name="abstract" content="This topic describes the parameters you must specify to run a code review analysis from a command line interface.." />
+<meta name="description" content="This topic describes the parameters you must specify to run a code review analysis from a command line interface.." />
+<meta name="DC.subject" content="code reviews, headless, reference, parameters, command line, command line, code review" />
+<meta name="keywords" content="code reviews, headless, reference, parameters, command line, command line, code review" />
+<meta name="DC.Relation" scheme="URI" content="../topics/rreference.html" />
+<meta name="copyright" content="(C) Copyright IBM Corporation 2004 2007" />
+<meta name="DC.Rights.Owner" content="(C) Copyright IBM Corporation 2004 2007" />
+<meta name="DC.Format" content="XHTML" />
+<meta name="DC.Identifier" content="componenttestheadlessmode" />
+<meta name="DC.Language" content="en-us" />
+<!-- All rights reserved. Licensed Materials Property of IBM -->
+<!-- US Government Users Restricted Rights -->
+<!-- Use, duplication or disclosure restricted by -->
+<!-- GSA ADP Schedule Contract with IBM Corp. -->
+<link rel="stylesheet" type="text/css" href="../ibmdita.css" />
+<link rel="stylesheet" type="text/css" href="../swg_info_common.css" />
+<link rel="Start" href="../topics/rreference.html" />
+<title>Headless (command line) mode code review reference</title>
+</head>
+<body id="componenttestheadlessmode"><a name="componenttestheadlessmode"><!-- --></a>
+<h1 class="topictitle1">Command line code review reference</h1>
+<div><p>This topic describes the parameters you must specify to run a code
+review analysis from a command line interface..</p>
+<div class="section"><h2 class="sectiontitle">Purpose</h2>The parameters for a command line code review
+application specify the scope of the analysis, the location of the source
+code, the rules to apply, and the location of the analysis results. The application
+can also write analysis results to stdout.<p>The instruction to run the code
+review command line application has the following syntax </p>
+</div>
+<div class="section"><p>Using the Eclipse executable file:</p>
+<span class="synph"><span class="var">&lt;path to Eclipse
+executable&gt;</span><span class="kwd">eclipse</span><span class="delim"> </span><span class="option">-data</span><span class="delim"> </span><span class="var">&lt;path
+to Java source files&gt;</span><span class="delim"> </span><span class="option">-application</span><span class="delim"> </span><span class="oper">com.ibm.xtools.analysis.commandline.AnalyzeApplication</span><span class="delim"> </span><span class="option">-rulefile</span><span class="delim"> </span><span class="var">&lt;path to
+rules file&gt;</span><span class="delim"> </span><span class="option">-directory or -projects</span><span class="delim"> </span><span class="var">&lt;path
+to Java source code&gt; or &lt;comma-separated list of project names&gt;</span><span class="option">-exportdirectory</span><span class="delim"> </span><span class="var">&lt;path
+to results directory&gt;</span><span class="delim"> </span><span class="var">&lt;optional parameters&gt;</span></span></div>
+<div class="section"><p>Using the Java™ launcher:</p>
+<span class="synph"><span class="var">&lt;path to
+Java executable&gt;</span><span class="kwd">java</span><span class="delim"> </span><span class="option">-cp</span><span class="delim"> </span><span class="var">path
+to Eclipse startup.jar</span><span class="delim"> </span><span class="oper">org.eclipse.core.launcher.Main</span><span class="option">-data</span><span class="delim"> </span><span class="var">&lt;path
+to Java source files&gt;</span><span class="delim"> </span><span class="option">-application</span><span class="delim"> </span><span class="oper">com.ibm.xtools.analysis.commandline.AnalyzeApplication</span><span class="delim"> </span><span class="option">-rulefile</span><span class="delim"> </span><span class="var">&lt;path to
+rules file&gt;</span><span class="delim"> </span><span class="option">-directory or -projects</span><span class="delim"> </span><span class="var">&lt;path
+to Java source code&gt; or &lt;comma-separated list of project names&gt;</span><span class="option">-exportdirectory</span><span class="delim"> </span><span class="var">&lt;path
+to results directory&gt;</span><span class="delim"> </span><span class="var">&lt;optional parameters&gt;</span></span><div class="note"><span class="notetitle">Note:</span> Enclose with quotation marks any paths that contain spaces. For
+example: <span class="filepath">"C:\Program Files\IBM\SDP70\startup.jar"</span>.</div>
+</div>
+<div class="section"><h2 class="sectiontitle">Parameters</h2><dl><dt class="dlterm"><span class="synph"><span class="kwd">-data</span><span class="delim"> </span><span class="var">fully qualified path to Java
+source files</span></span></dt>
+<dd>Mandatory. This can be the path to an existing Eclipse workspace, or the
+location of a temporary workspace.</dd>
+<dt class="dlterm"><span class="synph"><span class="kwd">-application</span><span class="delim"> </span><span class="oper">com.ibm.xtools.analysis.commandline.AnalyzeApplication</span></span></dt>
+<dd>Mandatory. The identifier of the Eclipse command line analysis application.</dd>
+<dt class="dlterm"><span class="synph"><span class="kwd">-rulefile</span><span class="delim"> </span><span class="var">fully qualified path to
+a rules file</span></span></dt>
+<dd>Mandatory. The rules file contains the code review rules to apply during
+the analysis.</dd>
+<dt class="dlterm"><span class="synph"><span class="kwd">-projects</span><span class="delim"> </span><span class="var">comma separated list of
+project names</span></span></dt>
+<dd>Mandatory (if the source code is part of an existing Eclipse workspace
+project). If you do not specify a workspace project, the code review runs
+on all the projects in the workspace.</dd>
+<dt class="dlterm"><span class="synph"><span class="kwd">-exportdirectory</span><span class="delim"> </span><span class="var">fully qualified
+path to results directory</span></span></dt>
+<dd>Mandatory. This is the path to a directory that will contain the analysis
+results.</dd>
+<dt class="dlterm"><span class="synph"><span class="kwd">-verbose</span></span></dt>
+<dd>Optional. This option takes no value, but writes all results to stdout.</dd>
+<dt class="dlterm"><span class="synph"><span class="kwd">-directory</span><span class="delim"> </span><span class="var">fully qualified path
+to the directory of a Java project</span></span></dt>
+<dd>Mandatory (if the source code is not in an existing Eclipse workspace).
+This is the path to source directory of a Java project that is not in an exiting Eclipse
+workspace. The <span class="option">-data</span> option creates a temporary project,
+called com.ibm.xtools.analysis.commandline.temp, and creates a source directory
+that links to the directory you specify with the <span class="option">-directory</span> option.</dd>
+<dt class="dlterm"><span class="synph"><span class="kwd">-includeFile</span><span class="delim"> </span><span class="var">fully qualified path
+to a text file</span></span></dt>
+<dd>Optional. This is a fully qualified path to a text file that lists source
+code files to include in the analysis. This option provides fine control over
+the source code files in the location you specify with the <span class="option">-directory</span> option.
+The text file must contain a line-separated list of source code files to include
+in the analysis. The paths you list in the text file must be relative to the
+source folder and must not be fully qualified paths.</dd>
+<dt class="dlterm"><span class="synph"><span class="kwd">-excludeFile</span><span class="delim"> </span><span class="var">fully qualified path
+to a text file</span></span></dt>
+<dd>Optional. This is a fully qualified path to a text file that lists source
+code files to exclude from the analysis. This option provides fine control
+over the source code files in the location you specify with the <span class="option">-directory</span> option.
+The text file must contain a line-separated list of source code files to exclude
+from the analysis. The paths you list in the text file must be relative to
+the source folder and must not be fully qualified paths.</dd>
+</dl>
+</div>
+<div class="example"><h2 class="sectiontitle">Sample</h2>The following sample instruction runs a code
+review analysis using the Java launcher:<pre>c:\ibmj9_50\jre\bin\java.exe -cp C:\progra~1\IBM\SDP70\startup.jar org.eclipse.core.launcher.Main
+-data "C:\Documents and Settings\default user\IBM\rationalsdp7.0\workspace-rsa-en"
+-application com.ibm.xtools.analysis.commandline.AnalyzeApplication
+-rulefile c:\temp\commlinecoderev.dat -projects hello.world1 -exportdirectory c:\temp
+-verbose</pre>
+</div>
+</div>
+<div>
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a href="../topics/rreference.html" title="The Code Review for Java domain comprises rule categories that contain rules that focus on several aspects of software quality such as design principles, globalization, J2EE and J2SE best practices, J2EE security, and software performance. An analysis of Java source code applies the rules to identify code that does not conform to recognized standards.">Code review reference</a></div>
+</div>
+</div></body>
+</html>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en-us" xml:lang="en-us">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="security" content="public" />
+<meta name="Robots" content="index,follow" />
+<meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
+<meta name="DC.Type" content="task" />
+<meta name="DC.Title" content="Running a code review from the command line" />
+<meta name="abstract" content="You can run code reviews on Java source code from the command line using analysis rules in a rules file that you created." />
+<meta name="description" content="You can run code reviews on Java source code from the command line using analysis rules in a rules file that you created." />
+<meta name="DC.subject" content="code review, command line, running, headless" />
+<meta name="keywords" content="code review, command line, running, headless" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tperfcodereview.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/ccodereview.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/cheadless.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/ccoderevcatsrules.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/rreference.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/rheadless.html" />
+<meta name="copyright" content="(C) Copyright IBM Corporation 2004 2007" />
+<meta name="DC.Rights.Owner" content="(C) Copyright IBM Corporation 2004 2007" />
+<meta name="DC.Format" content="XHTML" />
+<meta name="DC.Identifier" content="t_runheadless" />
+<meta name="DC.Language" content="en-us" />
+<!-- All rights reserved. Licensed Materials Property of IBM -->
+<!-- US Government Users Restricted Rights -->
+<!-- Use, duplication or disclosure restricted by -->
+<!-- GSA ADP Schedule Contract with IBM Corp. -->
+<link rel="stylesheet" type="text/css" href="../ibmdita.css" />
+<link rel="stylesheet" type="text/css" href="../swg_info_common.css" />
+<link rel="Start" href="../topics/tperfcodereview.html" />
+<title>Running a code review from the command line</title>
+</head>
+<body id="t_runheadless"><a name="t_runheadless"><!-- --></a>
+<h1 class="topictitle1">Running a code review from the command line</h1>
+<div><p>You can run code reviews on Java™ source code from the command line using
+analysis rules in a rules file that you created.</p>
+<div class="p">To run a code review from the command line, you must create a rules
+file.</div>
+<div class="section">Code reviews run from the command line operate an Eclipse environment
+in headless mode. You must specify the parameters required by the command-line
+analysis application, called <span class="cmdname">com.ibm.xtools.analysis.commandline.AnalyzeApplication</span>,
+when you run the code review. .<p>The headless mode reference topic <a href="rheadless.html" title="This topic describes the parameters you must specify to run a code review analysis from a command line interface..">Command line code review reference</a> shows the options and corresponding parameters
+for the command line application. The parameters specify the scope of the
+analysis, the location of the source code, the rules to apply, and the location
+of the analysis results. The application can also write analysis results to
+stdout.</p>
+To run a code review from the command line:</div>
+<ol><li class="stepexpand"><span>Open a command line interface (Microsoft<sup>®</sup> Windows<sup>®</sup> command prompt, or UNIX<sup>®</sup> or Linux<sup>®</sup> shell),
+and complete one of the following steps:</span><ul><li>To run a code review on Java source code in an existing Eclipse
+workspace, type the following instruction at the prompt:<pre><span class="cmdname">&lt;path to Eclipse executable file&gt;</span> <span class="option">-data</span> <span class="parmname">&lt;path to existing workspace&gt;</span> <span class="option">-application</span> <span class="cmdname">com.ibm.xtools.analysis.commandline.AnalyzeApplication</span>
+<span class="option">-rulefile</span> <span class="parmname">&lt;path to rules file&gt;</span> <span class="option">-projects</span> <span class="parmname">&lt;name of Java project&gt;</span> <span class="option">-exportdirectory</span> <span class="parmname">&lt;path to results directory&gt;</span>
+<span class="option">-verbose</span></pre>
+</li>
+<li>To run a code review on Java source code in a directory location
+that is not an Eclipse workspace, type the following instruction at the prompt:<pre><span class="cmdname">&lt;path to Eclipse executable file&gt;</span><span class="option">-data</span> <span class="parmname">&lt;path to temp workspace&gt;</span> <span class="option">-application</span> <span class="cmdname">com.ibm.xtools.analysis.commandline.AnalyzeApplication</span>
+<span class="option">-rulefile</span> <span class="parmname">&lt;path to rules file&gt;</span> <span class="option">-directory</span> <span class="parmname">&lt;path to Java source code src directory&gt;</span> <span class="option">-exportdirectory</span> <span class="parmname">&lt;path to results directory&gt;</span>
+<span class="option">-verbose</span></pre>
+</li>
+</ul>
+</li>
+<li class="stepexpand"><span>Press <span class="uicontrol">Enter</span> to start the code review.</span> <div class="note"><span class="notetitle">Note:</span> You can run the analysis using the Java launcher
+instead of the Eclipse executable file. To do so, replace the path to the
+Eclipse executable file with the path to the Java launhcer and a classpath option (<span class="option">-cp</span>),
+whose argument points to the <span class="parmname">startup.jar</span> file, and the <span class="cmdname">org.eclipse.core.launcher.Main</span> class.
+For example: <pre><span class="cmdname">&lt;path to Java executable&gt;</span> <span class="option">-cp</span> <span class="parmname">&lt;path to Eclipse startup.jar&gt;</span> <span class="cmdname">org.eclipse.core.launcher.Main</span> 
+<span class="option">-data</span> <span class="parmname">&lt;path to temp workspace&gt;</span> <span class="option">-application</span> <span class="cmdname">com.ibm.xtools.analysis.commandline.AnalyzeApplication</span>
+<span class="option">-rulefile</span> <span class="parmname">&lt;path to rules file&gt;</span> <span class="option">-directory</span> <span class="parmname">&lt;path to Java source code src directory&gt;</span> <span class="option">-exportdirectory</span> <span class="parmname">&lt;path to results directory&gt;</span>
+<span class="option">-verbose</span></pre>
+</div>
+</li>
+</ol>
+</div>
+<div>
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a href="../topics/tperfcodereview.html" title="In IBM Rational products, an automated static analysis code review lets you examine source code at any time during the development life cycle of an application. A code review ensures that the code complies with recognized coding standards, finds unwanted dependencies, and ensures that code development follows the intended structural design.">Performing an automated code review</a></div>
+</div>
+<div class="relconcepts"><strong>Related concepts</strong><br />
+<div><a href="../topics/ccodereview.html" title="A static analysis code review compares the source code of an application with a set of coding standards to ensure that the source code complies with those standards, to find unwanted dependencies, and to ensure that the intended structural design of the code is maintained.">Code reviews</a></div>
+<div><a href="../topics/cheadless.html" title="You can run code reviews on Java source code from a command line in a headless workbench, with no graphical user interface. This might be useful if you want to run code reviews unattended on a regular basis.">Command line code review</a></div>
+<div><a href="../topics/ccoderevcatsrules.html" title="Rules are the smallest building blocks of a static analysis configuration. Each analysis configuration applies different rules, or sets of rules, that define the conditions that generate results and that assess the quality of your resources. A rule category is a collection of analysis rules, or other categories, that focus on a particular aspect of standards compliance.">Rules and rule categories</a></div>
+</div>
+<div class="relref"><strong>Related reference</strong><br />
+<div><a href="../topics/rreference.html" title="The Code Review for Java domain comprises rule categories that contain rules that focus on several aspects of software quality such as design principles, globalization, J2EE and J2SE best practices, J2EE security, and software performance. An analysis of Java source code applies the rules to identify code that does not conform to recognized standards.">Code review reference</a></div>
+<div><a href="../topics/rheadless.html" title="This topic describes the parameters you must specify to run a code review analysis from a command line interface..">Command line code review reference</a></div>
+</div>
+</div></body>
+</html>

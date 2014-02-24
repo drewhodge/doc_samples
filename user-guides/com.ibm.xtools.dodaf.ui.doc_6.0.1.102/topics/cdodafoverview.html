@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en-us" xml:lang="en-us">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="security" content="public" />
+<meta name="Robots" content="index,follow" />
+<meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
+<meta name="DC.Type" content="concept" />
+<meta name="DC.Title" content="DoDAF feature overview" />
+<meta name="abstract" content="You can use the Department of Defense Architecture Framework (DoDAF) feature to describe the architecture of a complex system. The DoDAF feature uses the Unified Modeling Language (UML) as a base to represent a system's structure in visual, textual, and tabular formats." />
+<meta name="description" content="You can use the Department of Defense Architecture Framework (DoDAF) feature to describe the architecture of a complex system. The DoDAF feature uses the Unified Modeling Language (UML) as a base to represent a system's structure in visual, textual, and tabular formats." />
+<meta name="DC.Relation" scheme="URI" content="../topics/tenabledodaf.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tcreatedodafmod.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tenabledodaf.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tcreatedodafproj.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tdodafopviewprods.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tdodafsysviewprods.html" />
+<meta name="copyright" content="(C) Copyright IBM Corporation 2004 2006" />
+<meta name="DC.Rights.Owner" content="(C) Copyright IBM Corporation 2004 2006" />
+<meta name="DC.Format" content="XHTML" />
+<meta name="DC.Identifier" content="dodafconcept1" />
+<meta name="DC.Language" content="en-us" />
+<!-- All rights reserved. Licensed Materials Property of IBM -->
+<!-- US Government Users Restricted Rights -->
+<!-- Use, duplication or disclosure restricted by -->
+<!-- GSA ADP Schedule Contract with IBM Corp. -->
+<link rel="stylesheet" type="text/css" href="../../com.ibm.help.doc/ibmdita.css" />
+<link rel="stylesheet" type="text/css" href="../../com.ibm.help.doc/swg_info_common.css" />
+<title>DoDAF feature overview</title>
+<script language="JavaScript">
+    function popup_window( url, id, width, height )
+    {
+      popup = window.open( url, id, 'toolbar=no,scrollbars=no,location=no,statusbar=no,menubar=no,resizable=no,width=' + width + ',height=' + height + ',left=,top=' );
+      popup.focus();
+    }
+</script><script language="JavaScript" src="help/liveHelp.js"></script></head>
+<body id="dodafconcept1"><a name="dodafconcept1"><!-- --></a>
+
+<h1 class="topictitle1">DoDAF feature overview</h1>
+<div><p>You can use the Department of Defense Architecture Framework (DoDAF)
+feature to describe the architecture of a complex system. The DoDAF feature
+uses the Unified Modeling Language (UML) as a base to represent a system's
+structure in visual, textual, and tabular formats.</p><div class="section"><h4 class="sectiontitle">DoDAF architectural descriptions</h4><p>A DoDAF architectural
+description of a system comprises a set of descriptions, or views, that are
+linked to each other, and that each contain information about the system from
+a particular perspective. In DoDAF, these perspectives are called products.</p>
+<p>DoDAF
+classifies products according to their specific architectural attributes in
+three views: the Operational View (OV), the Systems View (SV), and the Technical
+Standards View (TV). Certain aspects of a system's architecture are best described
+by all three views. The DoDAF combines overview and summary information, and
+definitions of DoDAF product terminology in a view called All Views (AV).</p>
+<dl><dt class="dlterm">Operational View (OV)</dt>
+<dd>The Operational View describes all aspects of Department of Defense (DoD)
+functions, including war-fighting and business missions. Such aspects include
+the structure and behavior of the components that make up an operational environment,
+their relationships and dependencies, tasks and activities, operational elements
+(nodes), and the type and frequency of information exchanges and flows between
+nodes.</dd>
+<dt class="dlterm">Systems View (SV)</dt>
+<dd>The Systems View describes the internal structure and behavior of components
+that support DoD functions. This view also describes the relationships between
+system resources and the Operational View.</dd>
+<dt class="dlterm">Technical Standards View (TV)</dt>
+<dd>The Technical Standards View describes the standards and rules that govern
+the organization, interaction, and dependencies between existing and future
+states of the systems that the Systems View describes.</dd>
+<dt class="dlterm">All Views (AV)</dt>
+<dd>The All Views products provide information that applies to the entire
+architecture description of an operational environment. These views do not
+provide one perspective of the system, but describe information such as the
+scope, purpose, intended use, mission objectives, and strategies of the operational
+environment, and a dictionary of terms.</dd>
+</dl>
+</div>
+<div class="section"><h4 class="sectiontitle">DoDAF syntax and semantics</h4><p>DoDAF is designed to
+enable you to describe the structure of, and the relationships between, the
+components of an operational environment. To do this, DoDAF defines elements
+such as nodes, needlines, services, and information exchanges. It then provides
+rules that you use to model an operational environment to demonstrate how
+nodes co-operate and interact with each other to meet a mission objective.</p>
+<dl><dt class="dlterm">Nodes</dt>
+<dd>A node represents a logical or physical element in an architecture description
+of an operational environment that produces, consumes, or processes data.
+Nodes can be soldiers, sailors, aircrew, civilian workers, systems, or subsystems
+that are inside or outside the operational environment, and that interact
+with other elements in the environment.</dd>
+<dt class="dlterm">Needlines</dt>
+<dd>Needlines are the DoDAF equivalent of UML dependencies and relationships
+and they describe how nodes interact with each other. Needlines express the
+requirement by one node for services or information from other nodes, so they
+represent dependencies and the logical flow of information.</dd>
+<dt class="dlterm">Services</dt>
+<dd>A service is an operational capability that is transferred between nodes.
+The transfer of capabilities between nodes implies the transfer of information.</dd>
+<dt class="dlterm">Information exchanges</dt>
+<dd>An information exchange is a collection of information characteristics,
+such as timeliness and quality, and requirements that govern how information
+is gathered, shared, and used.</dd>
+</dl>
+</div>
+</div>
+<div><div class="reltasks"><strong>Related tasks</strong><br />
+<div><a href="../topics/tenabledodaf.html" title="Before you can develop DoDAF models, you must enable the DoDAF modeling capabilities.">Enabling DoDAF modeling capabilities</a></div>
+<div><a href="../topics/tcreatedodafmod.html" title="By using the appropriate conventions and views, you can create models of complex system architectures to comply with the Department of Defense Architectural Framework (DoDAF) version 1.0 specifications that describe operational environments and their components.">Creating a DoDAF model</a></div>
+<div><a href="../topics/tcreatedodafproj.html" title="You can open, close, save, and delete DoDAF projects and the files that belong to a project, including models. When you create a DoDAF modeling project, you can create both a new model and a set of DoDAF views.">Creating a DoDAF modeling project</a></div>
+<div><a href="../topics/tdodafopviewprods.html" title="You can create the Operational Node Connectivity Description (OV-2) and Operational Information Exchange Matrix (OV-3) products to describe the elements in an operational environment and to analyze the interactions between those elements.">Creating DoDAF Operational View products</a></div>
+<div><a href="../topics/tdodafsysviewprods.html" title="You can create operational realizations in the Systems Event Trace Descriptions (SV-10c) product and the Operational Activity to Systems Function Traceability Matrix (SV-5) product to map systems and system functions to operational capabilities and activities. Systems View products describe relationships between systems resources and the Operational Views.">Creating DoDAF Systems View products</a></div>
+</div>
+</div><div class="runningfooter">
+    <a href="https://www14.software.ibm.com/webapp/iwm/web/signup.do?source=rdf" target="_blank">Feedback</a>
+    <br />
+    (C) Copyright IBM Corporation 2004, 2005. All Rights Reserved.
+    <br />
+</div>
+</body>
+</html>

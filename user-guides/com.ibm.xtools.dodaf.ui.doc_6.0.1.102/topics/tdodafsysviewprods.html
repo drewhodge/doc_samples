@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en-us" xml:lang="en-us">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="security" content="public" />
+<meta name="Robots" content="index,follow" />
+<meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
+<meta name="DC.Type" content="task" />
+<meta name="DC.Title" content="Creating DoDAF Systems View products" />
+<meta name="abstract" content="You can create operational realizations in the Systems Event Trace Descriptions (SV-10c) product and the Operational Activity to Systems Function Traceability Matrix (SV-5) product to map systems and system functions to operational capabilities and activities. Systems View products describe relationships between systems resources and the Operational Views." />
+<meta name="description" content="You can create operational realizations in the Systems Event Trace Descriptions (SV-10c) product and the Operational Activity to Systems Function Traceability Matrix (SV-5) product to map systems and system functions to operational capabilities and activities. Systems View products describe relationships between systems resources and the Operational Views." />
+<meta name="DC.Relation" scheme="URI" content="../topics/tcreatedodafmod.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tenabledodaf.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tcreatedodafproj.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tdodafopviewprods.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/cdodafoverview.html" />
+<meta name="copyright" content="(C) Copyright IBM Corporation 2004 2006" />
+<meta name="DC.Rights.Owner" content="(C) Copyright IBM Corporation 2004 2006" />
+<meta name="DC.Format" content="XHTML" />
+<meta name="DC.Identifier" content="tdodafsysviewprods" />
+<meta name="DC.Language" content="en-us" />
+<!-- All rights reserved. Licensed Materials Property of IBM -->
+<!-- US Government Users Restricted Rights -->
+<!-- Use, duplication or disclosure restricted by -->
+<!-- GSA ADP Schedule Contract with IBM Corp. -->
+<link rel="stylesheet" type="text/css" href="../../com.ibm.help.doc/ibmdita.css" />
+<link rel="stylesheet" type="text/css" href="../../com.ibm.help.doc/swg_info_common.css" />
+<title>Creating DoDAF SV products</title>
+<script language="JavaScript">
+    function popup_window( url, id, width, height )
+    {
+      popup = window.open( url, id, 'toolbar=no,scrollbars=no,location=no,statusbar=no,menubar=no,resizable=no,width=' + width + ',height=' + height + ',left=,top=' );
+      popup.focus();
+    }
+</script><script language="JavaScript" src="help/liveHelp.js"></script></head>
+<body id="tdodafsysviewprods"><a name="tdodafsysviewprods"><!-- --></a>
+
+<h1 class="topictitle1">Creating DoDAF Systems View products</h1>
+<div><p>You can create operational realizations in the Systems Event Trace
+Descriptions (SV-10c) product and the Operational Activity to Systems Function
+Traceability Matrix (SV-5) product to map systems and system functions to
+operational capabilities and activities. Systems View products describe relationships
+between systems resources and the Operational Views.</p><div class="section">To create DoDAF Systems View products:</div>
+<ol><li class="stepexpand"><span>In the <span class="wintitle">Model Explorer</span> view, expand the <span class="uicontrol">Systems
+Nodes</span> package and double-click the <span class="uicontrol">Systems Nodes Diagram</span>.</span></li>
+<li class="stepexpand"><span>Add systems nodes to the Systems Nodes package:</span><ol type="a"><li><span>In the <span class="wintitle">Palette</span>, click <span class="uicontrol">DoDAF</span>.</span></li>
+<li id="tdodafsysviewprods__stepb"><a name="tdodafsysviewprods__stepb"><!-- --></a><span>In the <span class="wintitle">Palette</span>, click <span class="uicontrol">Systems
+Node</span>, and click in the diagram editor to insert the node.</span></li>
+<li id="tdodafsysviewprods__stepc"><a name="tdodafsysviewprods__stepc"><!-- --></a><span>Type a name for the node, and press Enter.</span></li>
+<li><span>To add systems nodes to the DoDAF model, repeat steps <a href="#tdodafsysviewprods__stepb">b</a> and <a href="#tdodafsysviewprods__stepc">c</a>.</span></li>
+</ol>
+</li>
+<li class="stepexpand"><span>To describe interactions between the systems nodes in your model,
+create sequence diagrams to represent DoDAF Systems Event Trace Descriptions
+(SV-10c) products :</span><ol type="a"><li class="substepexpand"><span>In the <span class="wintitle">Model Explorer</span> view, right-click
+an operational node; then click <span class="menucascade"><span class="uicontrol">DoDAF</span> &gt; <span class="uicontrol">Create Operational Realizations</span></span>.</span> The Systems Event Trace Descriptions (SV-10c) product under the
+DoDAF Views and Systems View packages of the model now has an operational
+realization, a sequence diagram, and an interaction.</li>
+<li class="substepexpand"><span>Type a name for the sequence diagram and press Enter.</span></li>
+</ol>
+</li>
+<li class="stepexpand"><span>In the sequence diagram, add lifelines to the interaction to represent
+the systems nodes in your model and add messages to describe information exchanges
+between the nodes.</span></li>
+<li class="stepexpand"><span>Generate the Operational Activity to Systems Function Traceability
+Matrix (SV-5): Right-click any element in your DoDAF model; then click <span class="menucascade"><span class="uicontrol">DoDAF</span> &gt; <span class="uicontrol">Show SV-5 View</span></span>.</span> The Operational Activity to Systems Function Traceability Matrix
+(SV-5) is displayed in the <span class="uicontrol">DoDAF SV-5 </span> view, which
+shows folders that contain realized operations and their system messages.</li>
+</ol>
+</div>
+<div>
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a href="../topics/tcreatedodafmod.html" title="By using the appropriate conventions and views, you can create models of complex system architectures to comply with the Department of Defense Architectural Framework (DoDAF) version 1.0 specifications that describe operational environments and their components.">Creating a DoDAF model</a></div>
+</div>
+<div class="relconcepts"><strong>Related concepts</strong><br />
+<div><a href="../topics/cdodafoverview.html" title="You can use the Department of Defense Architecture Framework (DoDAF) feature to describe the architecture of a complex system. The DoDAF feature uses the Unified Modeling Language (UML) as a base to represent a system's structure in visual, textual, and tabular formats.">DoDAF feature overview</a></div>
+</div>
+<div class="reltasks"><strong>Related tasks</strong><br />
+<div><a href="../topics/tenabledodaf.html" title="Before you can develop DoDAF models, you must enable the DoDAF modeling capabilities.">Enabling DoDAF modeling capabilities</a></div>
+<div><a href="../topics/tcreatedodafproj.html" title="You can open, close, save, and delete DoDAF projects and the files that belong to a project, including models. When you create a DoDAF modeling project, you can create both a new model and a set of DoDAF views.">Creating a DoDAF modeling project</a></div>
+<div><a href="../topics/tdodafopviewprods.html" title="You can create the Operational Node Connectivity Description (OV-2) and Operational Information Exchange Matrix (OV-3) products to describe the elements in an operational environment and to analyze the interactions between those elements.">Creating DoDAF Operational View products</a></div>
+</div>
+</div><div class="runningfooter">
+    <a href="https://www14.software.ibm.com/webapp/iwm/web/signup.do?source=rdf" target="_blank">Feedback</a>
+    <br />
+    (C) Copyright IBM Corporation 2004, 2005. All Rights Reserved.
+    <br />
+</div>
+</body>
+</html>

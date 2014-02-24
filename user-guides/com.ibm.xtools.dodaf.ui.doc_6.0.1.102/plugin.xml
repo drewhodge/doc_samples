@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+
+<!-- ========================================================== -->
+<!-- This plug-in declares an online help                       -->
+<!-- contribution for IBM Rational Software Archtiect and       -->
+<!-- Rational Systems Developer                                 -->
+<!-- Licensed Materials - Property of IBM                  -->
+<!-- (c) Copyright IBM Corp. 2004, 2006. All Rights Reserved.   -->
+<!-- ========================================================== -->
+
+<plugin
+   id="com.ibm.xtools.dodaf.ui.doc"
+   name="%plugin.name"
+   version="6.0.1.102"
+   provider-name="%provider.name">
+
+<!-- ========================================================== -->
+<!-- Define primary TOC                                         -->
+<!-- ========================================================== -->
+
+   <extension point="org.eclipse.help.toc">
+     <toc file="dodaf_toc.xml"
+          primary="true" />
+   </extension>
+
+</plugin>

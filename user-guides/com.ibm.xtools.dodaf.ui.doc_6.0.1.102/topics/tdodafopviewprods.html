@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en-us" xml:lang="en-us">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="security" content="public" />
+<meta name="Robots" content="index,follow" />
+<meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
+<meta name="DC.Type" content="task" />
+<meta name="DC.Title" content="Creating DoDAF Operational View products" />
+<meta name="abstract" content="You can create the Operational Node Connectivity Description (OV-2) and Operational Information Exchange Matrix (OV-3) products to describe the elements in an operational environment and to analyze the interactions between those elements." />
+<meta name="description" content="You can create the Operational Node Connectivity Description (OV-2) and Operational Information Exchange Matrix (OV-3) products to describe the elements in an operational environment and to analyze the interactions between those elements." />
+<meta name="DC.Relation" scheme="URI" content="../topics/tcreatedodafmod.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tenabledodaf.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tcreatedodafproj.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tdodafsysviewprods.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/cdodafoverview.html" />
+<meta name="copyright" content="(C) Copyright IBM Corporation 2004 2006" />
+<meta name="DC.Rights.Owner" content="(C) Copyright IBM Corporation 2004 2006" />
+<meta name="DC.Format" content="XHTML" />
+<meta name="DC.Identifier" content="tdodafopviewprods" />
+<meta name="DC.Language" content="en-us" />
+<!-- All rights reserved. Licensed Materials Property of IBM -->
+<!-- US Government Users Restricted Rights -->
+<!-- Use, duplication or disclosure restricted by -->
+<!-- GSA ADP Schedule Contract with IBM Corp. -->
+<link rel="stylesheet" type="text/css" href="../../com.ibm.help.doc/ibmdita.css" />
+<link rel="stylesheet" type="text/css" href="../../com.ibm.help.doc/swg_info_common.css" />
+<title>Creating DoDAF OV products</title>
+<script language="JavaScript">
+    function popup_window( url, id, width, height )
+    {
+      popup = window.open( url, id, 'toolbar=no,scrollbars=no,location=no,statusbar=no,menubar=no,resizable=no,width=' + width + ',height=' + height + ',left=,top=' );
+      popup.focus();
+    }
+</script><script language="JavaScript" src="help/liveHelp.js"></script></head>
+<body id="tdodafopviewprods"><a name="tdodafopviewprods"><!-- --></a>
+
+<h1 class="topictitle1">Creating DoDAF Operational View products</h1>
+<div><p>You can create the Operational Node Connectivity Description (OV-2)
+and Operational Information Exchange Matrix (OV-3) products to describe the
+elements in an operational environment and to analyze the interactions between
+those elements.</p><div class="p">Before you can perform this task, you must create a DoDAF modeling
+project.</div>
+<div class="section">To create DoDAF Operational View products:</div>
+<ol><li class="stepexpand"><span>In the <span class="wintitle">Model Explorer</span> view, expand the <span class="uicontrol">Operational
+Nodes</span> package and double-click the <span class="uicontrol">Operational Nodes
+Diagram</span>.</span></li>
+<li class="stepexpand"><span>Add operational nodes to the Operational Nodes package:</span><ol type="a"><li><span>In the <span class="wintitle">Palette</span>, click <span class="uicontrol">DoDAF</span>.</span></li>
+<li id="tdodafopviewprods__step2b"><a name="tdodafopviewprods__step2b"><!-- --></a><span>In the Palette, click <span class="uicontrol">Operational Node</span>,
+and then click in the diagram editor to insert the node.</span></li>
+<li id="tdodafopviewprods__step2c"><a name="tdodafopviewprods__step2c"><!-- --></a><span>Type a name for the node, and press Enter.</span></li>
+<li><span>To add more operational nodes to the DoDAF model, repeat steps <a href="#tdodafopviewprods__step2b">b</a> through <a href="#tdodafopviewprods__step2c">c</a>.</span></li>
+</ol>
+</li>
+<li class="stepexpand"><span>Add typed parameters to information exchanges (messages) in collaborations.</span><ol type="a"><li><span>In the <span class="wintitle">Model Explorer</span> view, expand the <span class="uicontrol">IO
+Entities</span> package and double-click the <span class="uicontrol">IO Entities Diagram</span>.</span></li>
+<li><span>In the <span class="wintitle">Palette</span>, click <span class="uicontrol">Class
+Diagram</span>.</span></li>
+<li id="tdodafopviewprods__step3c"><a name="tdodafopviewprods__step3c"><!-- --></a><span>In the <span class="wintitle">Palette</span>, click <span class="uicontrol">Class</span>,
+and then click in the diagram editor to insert a class to represent a parameter
+type for an information exchange.</span></li>
+<li id="tdodafopviewprods__step3d"><a name="tdodafopviewprods__step3d"><!-- --></a><span>Type a name for the class and press Enter.</span></li>
+<li><span>To add more parameter types, repeat steps <a href="#tdodafopviewprods__step3c">c</a> through <a href="#tdodafopviewprods__step3d">d</a>.</span></li>
+</ol>
+</li>
+<li class="stepexpand"><span>Create collaborations to describe interactions between the operational
+nodes in your model:</span><ol type="a"><li><span>In the <span class="wintitle">Model Explorer</span> view, expand your
+DoDAF model and its <span class="uicontrol">DoDAF Views</span>, <span class="uicontrol">Operational
+View</span>, and <span class="uicontrol">OV-6c</span> views.</span></li>
+<li><span>To add a collaboration to the OV-6c view, right-click the OC-6c
+view; then click <span class="menucascade"><span class="uicontrol">Add UML</span> &gt; <span class="uicontrol">Collaboration</span></span>.</span></li>
+<li><span>Type a name for the collaboration and press Enter.</span></li>
+<li><span>To add a sequence diagram and an interaction to the collaboration,
+right-click the collaboration; then click <span class="menucascade"><span class="uicontrol">Add UML</span> &gt; <span class="uicontrol">Sequence Diagram</span></span>.</span></li>
+</ol>
+</li>
+<li class="stepexpand" id="tdodafopviewprods__step5"><a name="tdodafopviewprods__step5"><!-- --></a><span>Add lifelines to the interaction to represent the operational
+nodes in your model and add messages to describe information exchanges between
+the nodes.</span></li>
+<li class="stepexpand"><span>Add parameters to each of the methods that correspond to the messages
+that you created in step <a href="#tdodafopviewprods__step5">5</a>.</span><ol type="a"><li><span>In the <span class="wintitle">Model Explorer</span> view, expand an operational
+node that receives a message that you created in step <a href="#tdodafopviewprods__step5">5</a>.</span></li>
+<li><span>In the <span class="wintitle">Model Explorer</span> view, right-click
+the method that corresponds to the message; then click <span class="menucascade"><span class="uicontrol">Add
+UML</span> &gt; <span class="uicontrol">Parameter</span></span>.</span></li>
+<li><span>Type a name for the parameter and press Enter.</span></li>
+<li><span>In the <span class="wintitle">Properties view</span>, click the <span class="uicontrol">Advanced</span> tab.</span></li>
+<li><span>In the <span class="wintitle">Property</span> column, click the <span class="uicontrol">Type</span> property.</span></li>
+<li><span>In the <span class="uicontrol">Value</span> column, click the ellipsis
+button (...).</span></li>
+<li><span>In the <span class="wintitle">Select Element</span> window, expand the
+IO Entities package; then click a class to assign the parameter a type.</span></li>
+</ol>
+</li>
+<li class="stepexpand"><span>Generate the Operational Node Connectivity Description (OV-2):
+Right-click any element in your DoDAF model; then click <span class="menucascade"><span class="uicontrol">DoDAF</span> &gt; <span class="uicontrol">Create OV-2</span></span>.</span> You might need
+to rearrange the OV-2 diagram layout to make it easier to read.</li>
+<li class="stepexpand"><span>Generate the Operational Information Exchange Matrix (OV-3): Right-click
+any element in your DoDAF model; then click <span class="menucascade"><span class="uicontrol">DoDAF</span> &gt; <span class="uicontrol">Show OV-3 View</span></span>.</span> The
+Operational Information Exchange Matrix (OV-3) is displayed in the <span class="wintitle">DoDAF
+OV-3</span> view.</li>
+</ol>
+</div>
+<div>
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a href="../topics/tcreatedodafmod.html" title="By using the appropriate conventions and views, you can create models of complex system architectures to comply with the Department of Defense Architectural Framework (DoDAF) version 1.0 specifications that describe operational environments and their components.">Creating a DoDAF model</a></div>
+</div>
+<div class="relconcepts"><strong>Related concepts</strong><br />
+<div><a href="../topics/cdodafoverview.html" title="You can use the Department of Defense Architecture Framework (DoDAF) feature to describe the architecture of a complex system. The DoDAF feature uses the Unified Modeling Language (UML) as a base to represent a system's structure in visual, textual, and tabular formats.">DoDAF feature overview</a></div>
+</div>
+<div class="reltasks"><strong>Related tasks</strong><br />
+<div><a href="../topics/tenabledodaf.html" title="Before you can develop DoDAF models, you must enable the DoDAF modeling capabilities.">Enabling DoDAF modeling capabilities</a></div>
+<div><a href="../topics/tcreatedodafproj.html" title="You can open, close, save, and delete DoDAF projects and the files that belong to a project, including models. When you create a DoDAF modeling project, you can create both a new model and a set of DoDAF views.">Creating a DoDAF modeling project</a></div>
+<div><a href="../topics/tdodafsysviewprods.html" title="You can create operational realizations in the Systems Event Trace Descriptions (SV-10c) product and the Operational Activity to Systems Function Traceability Matrix (SV-5) product to map systems and system functions to operational capabilities and activities. Systems View products describe relationships between systems resources and the Operational Views.">Creating DoDAF Systems View products</a></div>
+</div>
+</div><div class="runningfooter">
+    <a href="https://www14.software.ibm.com/webapp/iwm/web/signup.do?source=rdf" target="_blank">Feedback</a>
+    <br />
+    (C) Copyright IBM Corporation 2004, 2005. All Rights Reserved.
+    <br />
+</div>
+</body>
+</html>

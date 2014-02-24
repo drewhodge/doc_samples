@@ -1,0 +1,1489 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- QNX build file
+
+	This is the main QNX build file. This build file contains the logic required to build all supported
+	QNX output formats. This build file contains the following targets:
+	
+	eclipse - eclipse help plugins
+	eclipse-sdp - eclipse for SDP
+	eclipse-ndk - eclipse help with NDK-specific ditaval
+	
+	xhtml - XHTML for internal testing
+	neutrino - neutrino HTML help
+	pdf - 8.5 by 11, 6.4.2 styled, web format PDFs
+	pdf2 - 8.5 by 11, QNX generic PDFs
+	pdf6by9 - 6 by 9, QNX generic PDfs
+	pdf-rim - 7 by 9, RIM branded, with NDK-specific ditaval	
+-->
+
+     
+<project basedir="." default="main" name="build">
+
+
+    <!-- Utility targets and environment variables used by the build -->
+    <import file="qnx_utils.xml" />
+
+    <!-- Ant contrib used to create pdf file name -->
+    <taskdef resource="net/sf/antcontrib/antcontrib.properties">
+        <classpath>
+            <pathelement
+                location="${env.ANT_HOME}${file.separator}lib${file.separator}extensions${file.separator}ant-contrib-1.0b3.jar"
+             />
+        </classpath>
+    </taskdef>
+
+
+    <!-- if file is a relative file name, the file name will be resolved relative to the importing file -->
+    <import file="${dita.dir}${file.separator}integrator.xml" />
+
+    <!-- This is the main target - it builds Eclipse help by default -->
+    <target depends="getPluginName, eclipse" name="main"> </target>
+
+    <!-- ******************************************************* -->
+    <!-- MAIN BUILDS -->
+
+    <target depends="getPluginName, integrate, validatePlugin"
+        description="Generates eclipse documentation for the SDP." if="manifest.mf.exists"
+        name="eclipse-sdp">
+        <ant antfile="${dita.dir}${file.separator}build.xml" target="init">
+            <property name="args.input" value="${basedir}${file.separator}${ditamap.dita}" />
+            <property name="output.dir" value="${dita.out.dir}${file.separator}${plug-in.name}" />
+            <property name="args.css"
+                value="${dita.dir}${file.separator}../DITASource/buildfiles/style.css" />
+            <property name="args.copycss" value="yes" />
+            <property name="transtype" value="eclipsehelp+" />
+            <property name="plus.svgimage.format" value="svgobject" />
+            <property name="plus.svgobject.format" value="raster" />
+            <property name="plus.svgobject.raster.mimetype" value="image/jpeg" />
+            <property name="plus.svgobject.path" value="images" />
+            <property name="plus.svgobject.raster.imagemap" value="no" />
+            <!-- Add a footer to contain the copyright -->
+            <property name="args.ftr"
+                value="${dita.dir}${file.separator}../DITASource/buildfiles/custom-ftr.html" />
+            <property name="clean.temp" value="yes" />
+            <property name="generate.copy.outer" value="1" />
+            <property name="outer.control" value="quiet" />
+            <property name="onlytopic.in.map" value="yes" />
+            <!-- build with SDP ditaval -->
+            <property name="dita.input.valfile"
+                value="${dita.dir}${file.separator}../DITASource/buildfiles/sdp.ditaval" />
+        </ant>
+
+
+
+        <!-- copy about.html to the root of the plugin. This file is used by Eclipse. -->
+        <copy file="${dita.dir}${file.separator}../DITASource/buildfiles/about.html"
+            overwrite="true" todir="${dita.out.dir}${file.separator}${plug-in.name}" />
+
+        <!-- This section copies the special Dinkum about.html file into the output directory.  -->
+        <if>
+            <available file="${basedir}${file.separator}about.html" type="file" />
+            <then>
+                <copy failonerror="false" file="${basedir}${file.separator}about.html"
+                    overwrite="true" todir="${dita.out.dir}${file.separator}${plug-in.name}"> </copy>
+                <echo
+                    message="Copying special about.html file into the plugin. (Dinkum? I don't even know em.)"
+                 />
+            </then>
+            <else> </else>
+        </if>
+
+        <!-- Delete SVG source from final output folder -->
+        <delete failonerror="false">
+            <fileset dir="${dita.out.dir}${file.separator}${plug-in.name}${file.separator}images">
+                <filename name="**/*.svg" />
+            </fileset>
+        </delete>
+        <delete failonerror="false">
+            <fileset dir="${dita.out.dir}${file.separator}${plug-in.name}${file.separator}images">
+                <patternset>
+                    <include name="**/*.jpg" />
+                    <exclude name="**/*.xml*" />
+                </patternset>
+            </fileset>
+        </delete>
+
+        <antcall target="copystuff" />
+        <antcall target="zip" />
+
+    </target>
+
+    <!-- NDK nightly build target -->
+    <target depends="getPluginName, integrate, validatePlugin"
+        description="Generates documentation nightly for the NDK infocenter."
+        if="manifest.mf.exists" name="eclipse-ndk">
+        <ant antfile="${dita.dir}${file.separator}build.xml" target="init">
+            <property name="args.input" value="${basedir}${file.separator}${ditamap.dita}" />
+            <property name="output.dir" value="${dita.out.dir}${file.separator}${plug-in.name}" />
+            <property name="args.css"
+                value="${dita.dir}${file.separator}../DITASource/buildfiles/style.css" />
+            <property name="args.copycss" value="yes" />
+            <property name="transtype" value="eclipsehelp+" />
+            <property name="plus.svgimage.format" value="svgobject" />
+            <property name="plus.svgobject.format" value="raster" />
+            <property name="plus.svgobject.raster.mimetype" value="image/jpeg" />
+            <property name="plus.svgobject.path" value="images" />
+            <property name="plus.svgobject.raster.imagemap" value="no" />
+            <!-- Add a footer to contain the copyright -->
+            <property name="args.ftr"
+                value="${dita.dir}${file.separator}../DITASource/buildfiles/ndk-ftr.html" />
+            <property name="clean.temp" value="yes" />
+            <property name="generate.copy.outer" value="1" />
+            <property name="outer.control" value="quiet" />
+            <property name="onlytopic.in.map" value="yes" />
+            <!-- build with NDK ditaval -->
+            <property name="dita.input.valfile"
+                value="${dita.dir}${file.separator}../DITASource/buildfiles/ndk.ditaval" />
+        </ant>
+
+
+
+        <!-- copy about.html to the root of the plugin. This file is used by Eclipse. -->
+        <copy file="${dita.dir}${file.separator}../DITASource/buildfiles/about.html"
+            overwrite="true" todir="${dita.out.dir}${file.separator}${plug-in.name}" />
+
+        <!-- This section copies the special Dinkum about.html file into the output directory.  -->
+        <if>
+            <available file="${basedir}${file.separator}about.html" type="file" />
+            <then>
+                <copy failonerror="false" file="${basedir}${file.separator}about.html"
+                    overwrite="true" todir="${dita.out.dir}${file.separator}${plug-in.name}"> </copy>
+                <echo
+                    message="Copying special about.html file into the plugin. (Dinkum? I don't even know em.)"
+                 />
+            </then>
+            <else> </else>
+        </if>
+
+
+        <!-- Delete SVG source from final output folder -->
+        <delete failonerror="false">
+            <fileset dir="${dita.out.dir}${file.separator}${plug-in.name}${file.separator}images">
+                <filename name="**/*.svg" />
+            </fileset>
+        </delete>
+        <delete failonerror="false">
+            <fileset dir="${dita.out.dir}${file.separator}${plug-in.name}${file.separator}images">
+                <patternset>
+                    <include name="**/*.jpg" />
+                    <exclude name="**/*.xml*" />
+                </patternset>
+            </fileset>
+        </delete>
+
+        <antcall target="copystuff" />
+        <antcall target="zip" />
+
+    </target>
+
+    <!-- QNX CAR build target -->
+    <target depends="getPluginName, integrate, validatePlugin"
+        description="Generates documentation nightly for the NDK infocenter."
+        if="manifest.mf.exists" name="eclipse-car">
+        <ant antfile="${dita.dir}${file.separator}build.xml" target="init">
+            <property name="args.input" value="${basedir}${file.separator}${ditamap.dita}" />
+            <property name="output.dir" value="${dita.out.dir}${file.separator}${plug-in.name}" />
+            <property name="args.css"
+                value="${dita.dir}${file.separator}../DITASource/buildfiles/style.css" />
+            <property name="args.copycss" value="yes" />
+            <property name="transtype" value="eclipsehelp+" />
+            <property name="plus.svgimage.format" value="svgobject" />
+            <property name="plus.svgobject.format" value="raster" />
+            <property name="plus.svgobject.raster.mimetype" value="image/jpeg" />
+            <property name="plus.svgobject.path" value="images" />
+            <property name="plus.svgobject.raster.imagemap" value="no" />
+            <!-- Add a footer to contain the copyright -->
+            <property name="args.ftr"
+                value="${dita.dir}${file.separator}../DITASource/buildfiles/car-ftr.html" />
+            <property name="clean.temp" value="yes" />
+            <property name="generate.copy.outer" value="1" />
+            <property name="outer.control" value="quiet" />
+            <property name="onlytopic.in.map" value="yes" />
+            <!-- build with NDK ditaval -->
+            <property name="dita.input.valfile"
+                value="${dita.dir}${file.separator}../DITASource/buildfiles/car.ditaval" />
+        </ant>
+        
+        
+        
+        <!-- copy about.html to the root of the plugin. This file is used by Eclipse. -->
+        <copy file="${dita.dir}${file.separator}../DITASource/buildfiles/about.html"
+            overwrite="true" todir="${dita.out.dir}${file.separator}${plug-in.name}" />
+        
+        <!-- This section copies the special Dinkum about.html file into the output directory.  -->
+        <if>
+            <available file="${basedir}${file.separator}about.html" type="file" />
+            <then>
+                <copy failonerror="false" file="${basedir}${file.separator}about.html"
+                    overwrite="true" todir="${dita.out.dir}${file.separator}${plug-in.name}"> </copy>
+                <echo
+                    message="Copying special about.html file into the plugin. (Dinkum? I don't even know em.)"
+                />
+            </then>
+            <else> </else>
+        </if>
+        
+        
+        <!-- Delete SVG source from final output folder -->
+        <delete failonerror="false">
+            <fileset dir="${dita.out.dir}${file.separator}${plug-in.name}${file.separator}images">
+                <filename name="**/*.svg" />
+            </fileset>
+        </delete>
+        <delete failonerror="false">
+            <fileset dir="${dita.out.dir}${file.separator}${plug-in.name}${file.separator}images">
+                <patternset>
+                    <include name="**/*.jpg" />
+                    <exclude name="**/*.xml*" />
+                </patternset>
+            </fileset>
+        </delete>
+        
+        <antcall target="copystuff" />
+        <antcall target="zip" />
+        
+    </target>
+
+    <!-- QNX CAR public infocentre build target -->
+    <target depends="getPluginName, integrate, validatePlugin"
+        description="Generates documentation nightly for the NDK infocenter."
+        if="manifest.mf.exists" name="eclipse-car-pubinfocentre">
+        <ant antfile="${dita.dir}${file.separator}build.xml" target="init">
+            <property name="args.input" value="${basedir}${file.separator}${ditamap.dita}" />
+            <property name="output.dir" value="${dita.out.dir}${file.separator}${plug-in.name}" />
+            <property name="args.css"
+                value="${dita.dir}${file.separator}../DITASource/buildfiles/style.css" />
+            <property name="args.copycss" value="yes" />
+            <property name="transtype" value="eclipsehelp+" />
+            <property name="plus.svgimage.format" value="svgobject" />
+            <property name="plus.svgobject.format" value="raster" />
+            <property name="plus.svgobject.raster.mimetype" value="image/jpeg" />
+            <property name="plus.svgobject.path" value="images" />
+            <property name="plus.svgobject.raster.imagemap" value="no" />
+            <!-- Add a footer to contain the copyright -->
+            <property name="args.ftr"
+                value="${dita.dir}${file.separator}../DITASource/buildfiles/car-ftr.html" />
+            <property name="clean.temp" value="yes" />
+            <property name="generate.copy.outer" value="1" />
+            <property name="outer.control" value="quiet" />
+            <property name="onlytopic.in.map" value="yes" />
+            <!-- build with NDK ditaval -->
+            <property name="dita.input.valfile"
+                value="${dita.dir}${file.separator}../DITASource/buildfiles/car.ditaval" />
+        </ant>
+        
+        <!-- copy about.html to the root of the plugin. This file is used by Eclipse. -->
+        <copy file="${dita.dir}${file.separator}../DITASource/buildfiles/about.html"
+            overwrite="true" todir="${dita.out.dir}${file.separator}${plug-in.name}" />
+        
+        <!-- This section copies the special Dinkum about.html file into the output directory.  -->
+        <if>
+            <available file="${basedir}${file.separator}about.html" type="file" />
+            <then>
+                <copy failonerror="false" file="${basedir}${file.separator}about.html"
+                    overwrite="true" todir="${dita.out.dir}${file.separator}${plug-in.name}"> </copy>
+                <echo
+                    message="Copying special about.html file into the plugin. (Dinkum? I don't even know em.)"
+                />
+            </then>
+            <else> </else>
+        </if>
+        
+        
+        <!-- Delete SVG source from final output folder -->
+        <delete failonerror="false">
+            <fileset dir="${dita.out.dir}${file.separator}${plug-in.name}${file.separator}images">
+                <filename name="**/*.svg" />
+            </fileset>
+        </delete>
+        <delete failonerror="false">
+            <fileset dir="${dita.out.dir}${file.separator}${plug-in.name}${file.separator}images">
+                <patternset>
+                    <include name="**/*.jpg" />
+                    <exclude name="**/*.xml*" />
+                </patternset>
+            </fileset>
+        </delete>
+        
+        <antcall target="copystuff" />
+        <antcall target="zip" />
+        <antcall target="nobundle" />
+        
+    </target>
+
+    <!-- This is the double build for the Eclipse NDK product infocenter. -->
+    <target depends="getPluginName, integrate, validatePlugin"
+        description="This is the double build for the Eclipse NDK product infocenter. The NDK-only build happens first,
+        then the SDP and NDK build, then the second build is copied over top of the first with overwrite set to False."
+        if="manifest.mf.exists" name="eclipse-ndk-enablement">
+
+        <!-- First build. -->
+        <ant antfile="${dita.dir}${file.separator}build.xml" target="init">
+            <property name="args.input" value="${basedir}${file.separator}${ditamap.dita}" />
+            <property name="output.dir" value="${dita.out.dir}${file.separator}${plug-in.name}" />
+            <property name="args.css"
+                value="${dita.dir}${file.separator}../DITASource/buildfiles/style.css" />
+            <property name="args.copycss" value="yes" />
+            <property name="transtype" value="eclipsehelp+" />
+            <property name="plus.svgimage.format" value="svgobject" />
+            <property name="plus.svgobject.format" value="raster" />
+            <property name="plus.svgobject.raster.mimetype" value="image/jpeg" />
+            <property name="plus.svgobject.path" value="images" />
+            <property name="plus.svgobject.raster.imagemap" value="no" />
+            <!-- Add a footer to contain the copyright -->
+            <property name="args.ftr"
+                value="${dita.dir}${file.separator}../DITASource/buildfiles/ndk-ftr.html" />
+            <property name="clean.temp" value="yes" />
+            <property name="generate.copy.outer" value="1" />
+            <property name="outer.control" value="quiet" />
+            <property name="onlytopic.in.map" value="yes" />
+            <!-- build with NDK ditaval -->
+            <property name="dita.input.valfile"
+                value="${dita.dir}${file.separator}../DITASource/buildfiles/ndk.ditaval" />
+        </ant>
+
+        <!-- Second build. -->
+        <ant antfile="${dita.dir}${file.separator}build.xml" target="init">
+            <property name="args.input" value="${basedir}${file.separator}${ditamap.dita}" />
+            <property name="output.dir"
+                value="${dita.out.dir}${file.separator}ndk-enablement-temp${file.separator}${plug-in.name}" />
+            <property name="args.css"
+                value="${dita.dir}${file.separator}../DITASource/buildfiles/style.css" />
+            <property name="args.copycss" value="yes" />
+            <property name="transtype" value="eclipsehelp+" />
+            <property name="plus.svgimage.format" value="svgobject" />
+            <property name="plus.svgobject.format" value="raster" />
+            <property name="plus.svgobject.raster.mimetype" value="image/jpeg" />
+            <property name="plus.svgobject.path" value="images" />
+            <property name="plus.svgobject.raster.imagemap" value="no" />
+            <!-- Add a footer to contain the copyright -->
+            <property name="args.ftr"
+                value="${dita.dir}${file.separator}../DITASource/buildfiles/ndk-ftr.html" />
+            <property name="clean.temp" value="yes" />
+            <property name="generate.copy.outer" value="1" />
+            <property name="outer.control" value="quiet" />
+            <property name="onlytopic.in.map" value="yes" />
+            <!-- build with NDK ditaval -->
+            <property name="dita.input.valfile"
+                value="${dita.dir}${file.separator}../DITASource/buildfiles/ndk-enablement.ditaval"
+             />
+        </ant>
+
+        <!-- The big copy from temp to output-->
+        <echo>Copying toc files...</echo>
+        <copy failonerror="false" overwrite="true"
+            todir="${dita.out.dir}${file.separator}${plug-in.name}">
+            <fileset
+                dir="${dita.out.dir}${file.separator}ndk-enablement-temp${file.separator}${plug-in.name}">
+                <patternset>
+                    <include name="**/*.xml" />
+                    <exclude name="**/plugin.xml" />
+                    <exclude name="**/index.xml" />
+                </patternset>
+            </fileset>
+        </copy>
+
+        <echo>Copying SDP-specific files...</echo>
+        <copy failonerror="false" overwrite="false"
+            todir="${dita.out.dir}${file.separator}${plug-in.name}">
+            <fileset
+                dir="${dita.out.dir}${file.separator}ndk-enablement-temp${file.separator}${plug-in.name}"
+            > </fileset>
+        </copy>
+
+        <!--Delete temp ndk-directory -->
+        <echo>Deleting enablement temp dir...</echo>
+        <delete dir="${dita.out.dir}${file.separator}ndk-enablement-temp" failonerror="false"> </delete>
+
+
+        <!-- copy about.html to the root of the plugin. This file is used by Eclipse. -->
+        <copy file="${dita.dir}${file.separator}../DITASource/buildfiles/about.html"
+            overwrite="true" todir="${dita.out.dir}${file.separator}${plug-in.name}" />
+
+
+        <!-- This section copies the special Dinkum about.html file into the output directory.-->
+        <if>
+            <available file="${basedir}${file.separator}about.html" type="file" />
+            <then>
+                <copy failonerror="false" file="${basedir}${file.separator}about.html"
+                    overwrite="true" todir="${dita.out.dir}${file.separator}${plug-in.name}"> </copy>
+                <echo
+                    message="Copying special about.html file into the plugin. (Dinkum? I don't even know em.)"
+                 />
+            </then>
+            <else> </else>
+        </if>
+
+
+        <!-- Delete SVG source from final output folder -->
+        <delete failonerror="false">
+            <fileset dir="${dita.out.dir}${file.separator}${plug-in.name}${file.separator}images">
+                <filename name="**/*.svg" />
+            </fileset>
+        </delete>
+        <delete failonerror="false">
+            <fileset dir="${dita.out.dir}${file.separator}${plug-in.name}${file.separator}images">
+                <patternset>
+                    <include name="**/*.jpg" />
+                    <exclude name="**/*.xml*" />
+                </patternset>
+            </fileset>
+        </delete>
+
+        <antcall target="copystuff" />
+        <antcall target="zip" />
+
+    </target>
+
+    <!-- ******************************************************* -->
+    <!-- LOCAL BUILDS -->
+
+    <!-- This is where we build the Eclipse docs using the plugin name as the out dir -->
+    <target depends="getPluginName, integrate, validatePlugin"
+        description="Generates an eclipse plugin with no conditional
+		processing. i.e. all content."
+        if="manifest.mf.exists" name="eclipse">
+
+        <echo>Building plugin: ${folder.name}</echo>
+
+        <ant antfile="${dita.dir}${file.separator}build.xml" target="init">
+            <property name="args.input" value="${basedir}${file.separator}${ditamap.dita}" />
+            <property name="args.css"
+                value="${dita.dir}${file.separator}../DITASource/buildfiles/style.css" />
+            <property name="args.copycss" value="yes" />
+            <property name="output.dir" value="${dita.out.dir}${file.separator}${plug-in.name}" />
+            <property name="transtype" value="eclipsehelp+" />
+            <property name="plus.svgimage.format" value="svgobject" />
+            <property name="plus.svgobject.format" value="raster" />
+            <property name="plus.svgobject.raster.mimetype" value="image/jpeg" />
+            <property name="plus.svgobject.path" value="images" />
+            <!-- Add a footer to contain the copyright -->
+            <property name="args.ftr"
+                value="${dita.dir}${file.separator}../DITASource/buildfiles/custom-ftr.html" />
+            <property name="clean.temp" value="yes" />
+            <property name="outer.control" value="quiet" />
+            <property name="plus.svgobject.raster.imagemap" value="no" />
+        </ant>
+
+
+        <!-- copy about.html to the root of the plugin. This file is used by Eclipse. -->
+        <copy file="${dita.dir}${file.separator}../DITASource/buildfiles/about.html"
+            overwrite="true" todir="${dita.out.dir}${file.separator}${plug-in.name}" />
+
+        <!-- This section copies the special Dinkum about.html file into the output directory.  -->
+        <if>
+            <available file="${basedir}${file.separator}about.html" type="file" />
+            <then>
+                <copy failonerror="false" file="${basedir}${file.separator}about.html"
+                    overwrite="true" todir="${dita.out.dir}${file.separator}${plug-in.name}"> </copy>
+                <echo
+                    message="Copying special about.html file into the plugin. (Dinkum? I don't even know em.)"
+                 />
+            </then>
+            <else> </else>
+        </if>
+
+
+
+        <!-- Delete SVG source from final output folder -->
+        <delete failonerror="false">
+            <fileset dir="${dita.out.dir}${file.separator}${plug-in.name}${file.separator}images">
+                <filename name="**/*.svg" />
+            </fileset>
+        </delete>
+        <delete failonerror="false">
+            <fileset dir="${dita.out.dir}${file.separator}${plug-in.name}${file.separator}images">
+                <patternset>
+                    <include name="**/*.jpg" />
+                    <exclude name="**/*.xml*" />
+                </patternset>
+            </fileset>
+        </delete>
+        <antcall target="copystuff" />
+        <antcall target="zip" />
+
+    </target>
+
+    <!-- This is where we build the Neutrino docs using the plugin name as the out dir -->
+    <target depends="getPluginName, integrate, validatePlugin"
+        description="Generates help for the Photon help viewer" if="manifest.mf.exists"
+        name="photon">
+
+        <echo>Building plugin: ${folder.name}</echo>
+        <ant antfile="${dita.dir}${file.separator}build.xml" target="init">
+            <property name="args.input" value="${basedir}${file.separator}${ditamap.dita}" />
+            <property name="output.dir" value="${html.out.dir}${file.separator}${folder.name}" />
+            <property name="transtype" value="eclipsehelp+" />
+            <property name="args.css"
+                value="${dita.dir}${file.separator}../DITASource/buildfiles/style.css" />
+            <property name="args.copycss" value="yes" />
+            <property name="plus.svgimage.format" value="svgobject" />
+            <property name="plus.svgobject.format" value="raster" />
+            <property name="plus.svgobject.raster.mimetype" value="image/jpeg" />
+            <property name="plus.svgobject.path" value="images" />
+            <property name="clean.temp" value="yes" />
+            <property name="generate.copy.outer" value="1" />
+            <property name="outer.control" value="quiet" />
+            <property name="onlytopic.in.map" value="yes" />
+            <property name="plus.svgobject.raster.imagemap" value="no" />
+            <property name="args.ftr"
+                value="${dita.dir}${file.separator}../DITASource/buildfiles/custom-ftr-neut.html" />
+            <property name="dita.input.valfile"
+                value="${dita.dir}${file.separator}../DITASource/buildfiles/sdp.ditaval" />
+        </ant>
+
+        <!-- copy .toc to a spot above one level -->
+        <copy failonerror="false" overwrite="true" todir="${html.out.dir}${file.separator}">
+            <fileset dir="${basedir}" includes="**/*.toc"> </fileset>
+        </copy>
+        <!-- execute python toc builder -->
+        <exec dir="${html.out.dir}${file.separator}${folder.name}${file.separator}"
+            executable="python">
+            <arg line="../../DITASource/buildfiles/toc-gen.py main.xml" />
+        </exec>
+        <!-- copy .css -->
+        <copy failonerror="true" file="../buildfiles/commonltr.css" overwrite="true"
+            todir="${html.out.dir}${file.separator}${folder.name}" />
+        <copy failonerror="true" file="../buildfiles/qnxdoc.css" overwrite="true"
+            todir="${html.out.dir}${file.separator}${folder.name}" />
+
+        <!-- copy .swfs -->
+        <!--<copy todir="${html.out.dir}${file.separator}${folder.name}/swf" failonerror="false">
+            <fileset dir="${basedir}/swf" />
+        </copy>-->
+        <!-- copy common images from buildfiles plugin -->
+        <copy failonerror="false" todir="${html.out.dir}${file.separator}${folder.name}/images">
+            <fileset dir="..${file.separator}buildfiles${file.separator}images" />
+        </copy>
+        <!-- copy coverpage to the topic folder inside the plugin -->
+        <!-- <copy file="coverpage.html" todir="${html.out.dir}${file.separator}${folder.name}${file.separator}topic" overwrite="true" /> -->
+
+        <!-- copy bookset to the root dir -->
+        <copy failonerror="false" todir="${html.out.dir}${file.separator}">
+            <fileset dir="${basedir}">
+                <filename name="**/*_bookset.html" />
+            </fileset>
+        </copy>
+        <!-- remove SVGs from output directory -->
+        <delete>
+            <fileset dir="${html.out.dir}${file.separator}${folder.name}${file.separator}images">
+                <filename name="**/*.svg" />
+            </fileset>
+        </delete>
+        <delete>
+            <fileset dir="${html.out.dir}${file.separator}${folder.name}${file.separator}images">
+                <patternset>
+                    <include name="**/*.jpg" />
+                    <exclude name="**/*.xml*" />
+                </patternset>
+            </fileset>
+        </delete>
+
+    </target>
+
+    <!-- It's the XHTML transform - for people who have structure issues -->
+    <target depends="getPluginName, integrate, validatePlugin"
+        description="Generates documentation in framed XHTML. This target is useful for local testing."
+        if="manifest.mf.exists" name="xhtml">
+
+        <echo>Building plugin: ${folder.name}</echo>
+        <ant antfile="${dita.dir}${file.separator}conductor.xml" target="init">
+            <property name="args.input" value="${basedir}${file.separator}${ditamap.dita}" />
+            <property name="args.css"
+                value="${dita.dir}${file.separator}../DITASource/buildfiles/style.css" />
+            <property name="output.dir" value="${xhtml.out.dir}${file.separator}${folder.name}" />
+            <property name="transtype" value="xhtml+" />
+            <property name="plus.svgimage.format" value="svgobject" />
+            <property name="plus.svgobject.format" value="raster" />
+            <property name="plus.svgobject.raster.mimetype" value="image/jpeg" />
+            <property name="plus.svgobject.path" value="images" />
+            <property name="clean.temp" value="yes" />
+            <property name="outer.control" value="quiet" />
+            <property name="plus.svgobject.raster.imagemap" value="no" />
+        </ant>
+
+        <!--<copy todir="${xhtml.out.dir}${file.separator}${folder.name}/swf" failonerror="false">
+            <fileset dir="${basedir}/swf" />
+        </copy>-->
+        <!-- copy common images from buildfiles plugin -->
+        <copy failonerror="false" todir="${xhtml.out.dir}${file.separator}${folder.name}/images">
+            <fileset dir="..${file.separator}buildfiles${file.separator}images" />
+        </copy>
+
+        <copy failonerror="false" file="../buildfiles/commonltr.css" overwrite="true"
+            todir="${xhtml.out.dir}${file.separator}${folder.name}" />
+        <copy failonerror="false" file="../buildfiles/style.css" overwrite="true"
+            todir="${xhtml.out.dir}${file.separator}${folder.name}" />
+        <copy failonerror="false" file="../buildfiles/main.html" overwrite="true"
+            todir="${xhtml.out.dir}${file.separator}${folder.name}" />
+
+
+        <!-- Delete SVG source from final output folder -->
+        <delete>
+            <fileset dir="${xhtml.out.dir}${file.separator}${folder.name}${file.separator}images">
+                <filename name="**/*.svg" />
+            </fileset>
+        </delete>
+
+
+    </target>
+
+    <!-- It's the XHTML transform - for SDP -->
+    <target depends="getPluginName, integrate, validatePlugin"
+        description="Generates framed XHTML for the SDP." if="manifest.mf.exists" name="xhtml-sdp">
+        <echo>Building plugin: ${folder.name}</echo>
+        <ant antfile="${dita.dir}${file.separator}conductor.xml" target="init">
+            <property name="args.input" value="${basedir}${file.separator}${ditamap.dita}" />
+            <property name="args.css"
+                value="${dita.dir}${file.separator}../DITASource/buildfiles/style.css" />
+            <property name="output.dir" value="${xhtml.out.dir}${file.separator}${folder.name}" />
+            <property name="transtype" value="xhtml+" />
+            <property name="plus.svgimage.format" value="svgobject" />
+            <property name="plus.svgobject.format" value="raster" />
+            <property name="plus.svgobject.raster.mimetype" value="image/jpeg" />
+            <property name="plus.svgobject.path" value="images" />
+            <property name="clean.temp" value="yes" />
+            <property name="outer.control" value="quiet" />
+            <property name="plus.svgobject.raster.imagemap" value="no" />
+            <!-- build with SDP ditaval -->
+            <property name="dita.input.valfile"
+                value="${dita.dir}${file.separator}../DITASource/buildfiles/sdp.ditaval" />
+        </ant>
+
+        <!--<copy todir="${xhtml.out.dir}${file.separator}${folder.name}/swf" failonerror="false">
+            <fileset dir="${basedir}/swf" />
+        </copy>-->
+        <!-- copy common images from buildfiles plugin -->
+        <copy failonerror="false" todir="${xhtml.out.dir}${file.separator}${folder.name}/images">
+            <fileset dir="..${file.separator}buildfiles${file.separator}images" />
+        </copy>
+
+        <copy failonerror="false" file="../buildfiles/commonltr.css" overwrite="true"
+            todir="${xhtml.out.dir}${file.separator}${folder.name}" />
+        <copy failonerror="false" file="../buildfiles/style.css" overwrite="true"
+            todir="${xhtml.out.dir}${file.separator}${folder.name}" />
+        <copy failonerror="false" file="../buildfiles/main.html" overwrite="true"
+            todir="${xhtml.out.dir}${file.separator}${folder.name}" />
+
+
+        <!-- Delete SVG source from final output folder -->
+        <delete>
+            <fileset dir="${xhtml.out.dir}${file.separator}${folder.name}${file.separator}images">
+                <filename name="**/*.svg" />
+            </fileset>
+        </delete>
+
+
+    </target>
+
+
+    <!-- It's the XHTML transform - for NDK -->
+    <target depends="getPluginName, integrate, validatePlugin"
+        description="Generates framed XHTML documentation for the NDK." if="manifest.mf.exists"
+        name="xhtml-ndk">
+        <echo>Building plugin: ${folder.name}</echo>
+        <ant antfile="${dita.dir}${file.separator}conductor.xml" target="init">
+            <property name="args.input" value="${basedir}${file.separator}${ditamap.dita}" />
+            <property name="args.css"
+                value="${dita.dir}${file.separator}../DITASource/buildfiles/style.css" />
+            <property name="output.dir" value="${xhtml.out.dir}${file.separator}${folder.name}" />
+            <property name="transtype" value="xhtml+" />
+            <property name="plus.svgimage.format" value="svgobject" />
+            <property name="plus.svgobject.format" value="raster" />
+            <property name="plus.svgobject.raster.mimetype" value="image/jpeg" />
+            <property name="plus.svgobject.path" value="images" />
+            <property name="clean.temp" value="yes" />
+            <property name="outer.control" value="quiet" />
+            <property name="plus.svgobject.raster.imagemap" value="no" />
+            <!-- build with NDK ditaval -->
+            <property name="dita.input.valfile"
+                value="${dita.dir}${file.separator}../DITASource/buildfiles/ndk-enablement.ditaval"
+             />
+        </ant>
+
+        <!--<copy todir="${xhtml.out.dir}${file.separator}${folder.name}/swf" failonerror="false">
+            <fileset dir="${basedir}/swf" />
+        </copy>-->
+        <!-- copy common images from buildfiles plugin -->
+        <copy failonerror="false" todir="${xhtml.out.dir}${file.separator}${folder.name}/images">
+            <fileset dir="..${file.separator}buildfiles${file.separator}images" />
+        </copy>
+
+        <copy failonerror="false" file="../buildfiles/commonltr.css" overwrite="true"
+            todir="${xhtml.out.dir}${file.separator}${folder.name}" />
+        <copy failonerror="false" file="../buildfiles/style.css" overwrite="true"
+            todir="${xhtml.out.dir}${file.separator}${folder.name}" />
+        <copy failonerror="false" file="../buildfiles/main.html" overwrite="true"
+            todir="${xhtml.out.dir}${file.separator}${folder.name}" />
+
+
+        <!-- Delete SVG source from final output folder -->
+        <delete>
+            <fileset dir="${xhtml.out.dir}${file.separator}${folder.name}${file.separator}images">
+                <filename name="**/*.svg" />
+            </fileset>
+        </delete>
+
+
+    </target>
+
+    <!-- XHTML transform -/- for CAR -->
+    <target depends="getPluginName, integrate, validatePlugin"
+        description="Generates framed XHTML documentation for the NDK." if="manifest.mf.exists"
+        name="xhtml-car">
+        <echo>Building plugin: ${folder.name}</echo>
+        <ant antfile="${dita.dir}${file.separator}conductor.xml" target="init">
+            <property name="args.input" value="${basedir}${file.separator}${ditamap.dita}" />
+            <property name="args.css"
+                value="${dita.dir}${file.separator}../DITASource/buildfiles/style.css" />
+            <property name="output.dir" value="${xhtml.out.dir}${file.separator}${folder.name}" />
+            <property name="transtype" value="xhtml+" />
+            <property name="plus.svgimage.format" value="svgobject" />
+            <property name="plus.svgobject.format" value="raster" />
+            <property name="plus.svgobject.raster.mimetype" value="image/jpeg" />
+            <property name="plus.svgobject.path" value="images" />
+            <property name="clean.temp" value="yes" />
+            <property name="outer.control" value="quiet" />
+            <property name="plus.svgobject.raster.imagemap" value="no" />
+            <!-- build with CAR ditaval -->
+            <property name="dita.input.valfile"
+                value="${dita.dir}${file.separator}../DITASource/buildfiles/car.ditaval"
+            />
+        </ant>
+        
+        <!--<copy todir="${xhtml.out.dir}${file.separator}${folder.name}/swf" failonerror="false">
+            <fileset dir="${basedir}/swf" />
+        </copy>-->
+        <!-- copy common images from buildfiles plugin -->
+        <copy failonerror="false" todir="${xhtml.out.dir}${file.separator}${folder.name}/images">
+            <fileset dir="..${file.separator}buildfiles${file.separator}images" />
+        </copy>
+        
+        <copy failonerror="false" file="../buildfiles/commonltr.css" overwrite="true"
+            todir="${xhtml.out.dir}${file.separator}${folder.name}" />
+        <copy failonerror="false" file="../buildfiles/style.css" overwrite="true"
+            todir="${xhtml.out.dir}${file.separator}${folder.name}" />
+        <copy failonerror="false" file="../buildfiles/main.html" overwrite="true"
+            todir="${xhtml.out.dir}${file.separator}${folder.name}" />
+        
+        
+        <!-- Delete SVG source from final output folder -->
+        <delete>
+            <fileset dir="${xhtml.out.dir}${file.separator}${folder.name}${file.separator}images">
+                <filename name="**/*.svg" />
+            </fileset>
+        </delete>
+        
+        
+    </target>
+
+    <!-- ******************************************************* -->
+    <!-- PDF BUILDS -->
+
+    <!-- This is where the generic/non 6.4.2 .pdf gets built -->
+    <target depends="getPluginName, integrate, validatePlugin"
+        description="Generates a pdf using QNX branding with no conditional processing. i.e. all content."
+        if="manifest.mf.exists" name="pdf">
+        <echo>Building pdf for: ${folder.name}</echo>
+        <echo>Using map: ${bookmap.dita}</echo>
+        <ant antfile="${dita.dir}${file.separator}conductor.xml" target="init">
+            <property name="args.input" value="${basedir}${file.separator}${bookmap.dita}" />
+            <property name="args.fo.include.rellinks" value="all" />
+            <property name="output.dir" value="${pdf.out.dir}${file.separator}${folder.name}" />
+            <property name="transtype" value="pdf2" />
+            <property name="clean.temp" value="no" />
+            <property name="outer.control" value="quiet" />
+            <property name="customization.dir"
+                value="${dita.dir}${file.separator}demo${file.separator}fo${file.separator}Customization-generic" />
+
+        </ant>
+        <!-- Rename the pdf after the plugin title in the manifest file -->
+        <propertyregex global="true" input="${title}" property="pdf.title" regexp=" " replace="_" />
+
+        <move failonerror="false"
+            file="${pdf.out.dir}${file.separator}${folder.name}${file.separator}${folder.name}${file.separator}book.pdf"
+            tofile="${pdf.out.dir}${file.separator}${folder.name}${file.separator}${pdf.title}.pdf"
+        > </move>
+    </target>
+
+    <!-- QNX branded - SDP only -->
+    <target depends="getPluginName, integrate, validatePlugin"
+        description="Generates a pdf with QNX branding for the SDP." if="manifest.mf.exists"
+        name="pdf-sdp">
+        <echo>Building pdf for: ${folder.name}</echo>
+        <ant antfile="${dita.dir}${file.separator}conductor.xml" target="init">
+            <property name="args.input" value="${basedir}${file.separator}${bookmap.dita}" />
+            <property name="output.dir" value="${pdf.out.dir}${file.separator}${folder.name}" />
+            <property name="transtype" value="pdf2" />
+            <property name="clean.temp" value="yes" />
+            <property name="outer.control" value="quiet" />
+            <property name="customization.dir"
+                value="${dita.dir}${file.separator}demo${file.separator}fo${file.separator}Customization-generic" />
+            <!-- build with SDP ditaval -->
+            <property name="dita.input.valfile"
+                value="${dita.dir}${file.separator}../DITASource/buildfiles/sdp.ditaval" />
+        </ant>
+        <!-- Rename the pdf after the plugin title in the manifest file -->
+        <propertyregex global="true" input="${title}" property="pdf.title" regexp=" " replace="_" />
+
+        <move failonerror="false"
+            file="${pdf.out.dir}${file.separator}${folder.name}${file.separator}${folder.name}${file.separator}book.pdf"
+            tofile="${pdf.out.dir}${file.separator}${folder.name}${file.separator}${pdf.title}.pdf"
+        > </move>
+    </target>
+    
+    <!-- QNX CAR PDF target -->
+    <target depends="getPluginName, integrate, validatePlugin"
+        description="Generates a pdf with for QNX CAR." if="manifest.mf.exists"
+        name="pdf-car">
+        <echo>Building pdf for: ${folder.name}</echo>
+        <ant antfile="${dita.dir}${file.separator}conductor.xml" target="init">
+            <property name="args.input" value="${basedir}${file.separator}${bookmap.dita}" />
+            <property name="output.dir" value="${pdf.out.dir}${file.separator}${folder.name}" />
+            <property name="transtype" value="pdf2" />
+            <property name="clean.temp" value="yes" />
+            <property name="outer.control" value="quiet" />
+            <property name="customization.dir"
+                value="${dita.dir}${file.separator}demo${file.separator}fo${file.separator}Customization-generic" />
+            <property name="dita.input.valfile"
+                value="${dita.dir}${file.separator}../DITASource/buildfiles/car.ditaval" />
+        </ant>
+        <!-- Rename the pdf after the plugin title in the manifest file -->
+        <propertyregex global="true" input="${title}" property="pdf.title" regexp=" " replace="_" />
+        
+        <move failonerror="false"
+            file="${pdf.out.dir}${file.separator}${folder.name}${file.separator}${folder.name}${file.separator}book.pdf"
+            tofile="${pdf.out.dir}${file.separator}${folder.name}${file.separator}${pdf.title}.pdf"
+            > </move>
+    </target>
+
+    <!-- RIM PDF transformations -->
+    <target depends="getPluginName, integrate, validatePlugin"
+        description="Generates a pdf with RIM branding for the NDK." if="manifest.mf.exists"
+        name="pdf-ndk">
+        <echo>Building pdf for: ${folder.name}</echo>
+        <ant antfile="${dita.dir}${file.separator}conductor.xml" target="init">
+            <property name="args.input" value="${basedir}${file.separator}${bookmap.dita}" />
+            <property name="output.dir" value="${pdf.out.dir}${file.separator}${folder.name}" />
+            <property name="transtype" value="pdf2" />
+            <property name="clean.temp" value="yes" />
+            <property name="outer.control" value="quiet" />
+            <property name="customization.dir"
+                value="${dita.dir}${file.separator}demo${file.separator}fo${file.separator}Customization-RIM" />
+            <!-- build with NDK ditaval -->
+            <property name="dita.input.valfile"
+                value="${dita.dir}${file.separator}../DITASource/buildfiles/ndk-enablement.ditaval"
+             />
+        </ant>
+        <!-- Rename the pdf after the plugin title in the manifest file -->
+        <propertyregex global="true" input="${title}" property="pdf.title" regexp=" " replace="_" />
+
+        <if>
+            <available file="${pdf.out.dir}${file.separator}${folder.name}${file.separator}book.pdf"
+                type="file" />
+            <then>
+                <move failonerror="false"
+                    file="${pdf.out.dir}${file.separator}${folder.name}${file.separator}book.pdf"
+                    tofile="${pdf.out.dir}${file.separator}${folder.name}${file.separator}${pdf.title}.pdf"> </move>
+                <echo message="Moving book.pdf" />
+            </then>
+            <else>
+                <move failonerror="false"
+                    file="${pdf.out.dir}${file.separator}${folder.name}${file.separator}${folder.name}${file.separator}book.pdf"
+                    tofile="${pdf.out.dir}${file.separator}${folder.name}${file.separator}${pdf.title}.pdf"
+                > </move>
+            </else>
+        </if>
+    </target>
+
+    <!-- CD booklet -->
+    <target depends="getPluginName, integrate, validatePlugin"
+        description="Generates a CD-sized pdf with QNX branding." if="manifest.mf.exists"
+        name="pdf-cd">
+        <echo>Building pdf for: ${folder.name}</echo>
+        <ant antfile="${dita.dir}${file.separator}conductor.xml" target="init">
+            <property name="args.input" value="${basedir}${file.separator}${bookmap.dita}" />
+            <property name="output.dir" value="${pdf.out.dir}${file.separator}${folder.name}" />
+            <property name="transtype" value="pdf2" />
+            <property name="clean.temp" value="yes" />
+            <property name="outer.control" value="quiet" />
+            <property name="customization.dir"
+                value="${dita.dir}${file.separator}demo${file.separator}fo${file.separator}Customization-install"
+             />
+        </ant>
+        <!-- Rename the pdf after the plugin title in the manifest file -->
+        <propertyregex global="true" input="${title}" property="pdf.title" regexp=" " replace="_" />
+
+        <move failonerror="false"
+            file="${pdf.out.dir}${file.separator}${folder.name}${file.separator}${folder.name}${file.separator}book.pdf"
+            tofile="${pdf.out.dir}${file.separator}${folder.name}${file.separator}${pdf.title}.pdf"
+        > </move>
+    </target>
+
+    <!-- This is where the generic/non 6.4.2 .pdf gets built -->
+    <target depends="getPluginName, integrate, validatePlugin"
+        description="Generates a 6by9-sized pdf with QNX branding." if="manifest.mf.exists"
+        name="pdf6x9">
+        <echo>Building pdf for: ${folder.name}</echo>
+        <ant antfile="${dita.dir}${file.separator}conductor.xml" target="init">
+            <property name="args.input" value="${basedir}${file.separator}${bookmap.dita}" />
+            <property name="output.dir" value="${pdf.out.dir}${file.separator}${folder.name}" />
+            <property name="transtype" value="pdf2" />
+            <property name="clean.temp" value="yes" />
+            <property name="outer.control" value="quiet" />
+            <property name="customization.dir"
+                value="${dita.dir}${file.separator}demo${file.separator}fo${file.separator}Customization-6by9"
+             />
+        </ant>
+        <!-- Rename the pdf after the plugin title in the manifest file -->
+        <propertyregex global="true" input="${title}" property="pdf.title" regexp=" " replace="_" />
+
+        <move failonerror="false"
+            file="${pdf.out.dir}${file.separator}${folder.name}${file.separator}${folder.name}${file.separator}book.pdf"
+            tofile="${pdf.out.dir}${file.separator}${folder.name}${file.separator}${pdf.title}.pdf"
+        > </move>
+    </target>
+
+    <!-- The technote - for when proper documentation just won't do -->
+    <target depends="getPluginName, integrate, validatePlugin" description="Generates a technote."
+        if="manifest.mf.exists" name="technote">
+        <echo>Building technote for: ${folder.name}</echo>
+        <ant antfile="${dita.dir}${file.separator}conductor.xml" target="init">
+            <property name="args.input" value="${basedir}${file.separator}${bookmap.dita}" />
+            <property name="output.dir" value="${pdf.out.dir}${file.separator}${folder.name}" />
+            <property name="transtype" value="pdf2" />
+            <property name="clean.temp" value="yes" />
+            <property name="outer.control" value="quiet" />
+            <property name="customization.dir"
+                value="${dita.dir}${file.separator}demo${file.separator}fo${file.separator}Customization-technote"
+             />
+        </ant>
+
+    </target>
+
+    <!-- ******************************************************* -->
+    <!-- General Purpose builds -->
+
+    <!-- DITA Pre-process build: generates intermediate (normalized) DITA source (prep for 
+         RIM/TAT target). -->
+    <target depends="getPluginName, integrate, validatePlugin"
+        description="Generates intermediate (normalized) DITA source." if="manifest.mf.exists"
+        name="dita2dita">
+        <echo>Building normalized plug-in: ${folder.name}</echo>
+        <ant antfile="${dita.dir}${file.separator}conductor.xml" target="init">
+            <property name="args.input" value="${basedir}${file.separator}${ditamap.dita}" />
+            <property name="output.dir" value="${project.dir}${file.separator}normalized" />
+            <property name="transtype" value="eclipsecontent" />
+            <property name="tempdir" value="${ndk.out.dir}${file.separator}${folder.name}temp" />
+            <property name="clean.temp" value="no" />
+            <property name="outer.control" value="quiet" />
+            <!-- build with NDK ditaval -->
+            <property name="dita.input.valfile"
+                value="${dita.dir}${file.separator}../DITASource/buildfiles/rimTAT.ditaval" />
+        </ant>
+    </target>
+
+    <!-- General purpose target to operate on sets of files with XSLT scripts
+        external to the DITA OT.  -->
+    <target description="General purpose target." name="genPurpose">
+        <echo message="*****************************************************************" />
+        <echo message="* General purpose transformation." />
+        <echo message="*****************************************************************" />
+
+        <property name="output.dir" value="${ndk.out.dir}${file.separator}${folder.name}" />
+
+        <echo message="Applying RIM/TAT transformation ... " />
+        <xslt
+            basedir="/Users/dhodge/Development/DITASource/com.qnx.doc.bps.lib_ref/temp/com.qnx.doc.screen.lib_ref/topic"
+            destdir="${ndk.out.dir}/com.qnx.doc.bps.lib_ref/com.qnx.doc.screen.lib_ref/topic"
+            extension=".xml" includes="**/*.xml"
+            style="${dita.dir}${file.separator}plugins${file.separator}com.qnx.dita.transform.safetytables${file.separator}xsl${file.separator}qnx_to_tat.xsl" />
+
+        <echo message="Copying image files ... " />
+        <copy failonerror="false" flatten="true"
+            todir="${ndk.out.dir}/com.qnx.doc.bps.lib_ref/com.qnx.doc.screen.lib_ref/images">
+            <fileset
+                dir="/Users/dhodge/Development/DITASource/com.qnx.doc.bps.lib_ref/temp/com.qnx.doc.screen.lib_ref/images">
+                <include name="**/*.svg" />
+                <include name="**/*.gif" />
+                <include name="**/*.jpg" />
+                <include name="**/*.png" />
+            </fileset>
+        </copy>
+    </target>
+
+    <!-- Processes DITA source topics for RIM/TAT Developer's microsite. -->
+    <target depends="getPluginName"
+        description="Convert intermediate (normalized) DITA source to RIM/TAT source." name="rimTAT">
+        <echo message="*****************************************************************" />
+        <echo message="* Convert intermediate DITA source to RIM/TAT source." />
+        <echo message="*****************************************************************" />
+
+        <property name="output.dir" value="${ndk.out.dir}${file.separator}${folder.name}" />
+        <mkdir dir="${output.dir}" />
+
+        <property name="normalized.dir" value="${project.dir}${file.separator}normalized" />
+
+        <echo message="Normalizing DITA source ... " />
+        <antcall target="dita2dita" />
+
+        <if>
+            <available file="${project.dir}${file.separator}normalized${file.separator}topic"
+                type="dir" />
+            <then>
+                <echo>Applying RIM/TAT transformation to DITA topics in ${folder.name} ...</echo>
+                <xslt basedir="${project.dir}${file.separator}normalized${file.separator}topic"
+                    destdir="${output.dir}${file.separator}topic" extension=".xml"
+                    includes="**/*.xml" excludes="plugin.xml, index.xml"
+                    style="${dita.dir}${file.separator}plugins${file.separator}com.qnx.dita.transform.safetytables${file.separator}xsl${file.separator}qnx_to_tat.xsl" />
+                <echo>Cleaning toc.xml file ...</echo>
+                <xslt basedir="${project.dir}${file.separator}normalized" destdir="${output.dir}"
+                    excludes="plugin.xml, index.xml" extension=".xml" includes="*.xml"
+                    style="${dita.dir}${file.separator}plugins${file.separator}com.qnx.dita.transform.safetytables${file.separator}xsl${file.separator}clean_toc.xsl" />
+                <echo message="Copying images ..." />
+                <copy failonerror="true" todir="${output.dir}">
+                    <fileset dir="${project.dir}${file.separator}normalized">
+                        <include name="images/**" />
+                        <exclude name="**/*.properties" />
+                        <exclude name="**/*.list" />
+                        <exclude name="delta.gif" />
+                        <exclude name="deltaend.gif" />
+                        <exclude name="topic/**" />
+                        <exclude name="**/*.xml" />
+                    </fileset>
+                </copy>
+            </then>
+            <elseif>
+                <available
+                    file="${project.dir}${file.separator}normalized${file.separator}${folder.name}"
+                    type="dir" />
+                <then>
+                    <echo>Processing cross-plug-in subdirectories and applying RIM/TAT transformation to DITA topics in ${folder.name}...</echo>
+                    <xslt basedir="${project.dir}${file.separator}normalized" destdir="${output.dir}"
+                        extension=".xml" includes="**/*.xml" excludes="plugin.xml, index.xml"
+                        style="${dita.dir}${file.separator}plugins${file.separator}com.qnx.dita.transform.safetytables${file.separator}xsl${file.separator}qnx_to_tat.xsl" />
+                    <echo>Cleaning toc.xml file in ${normalized.dir} ...</echo>
+                    <xslt basedir="${project.dir}${file.separator}normalized" destdir="${output.dir}"
+                        extension=".xml" force="true" includes="*.xml" excludes="plugin.xml, index.xml"
+                        style="${dita.dir}${file.separator}plugins${file.separator}com.qnx.dita.transform.safetytables${file.separator}xsl${file.separator}clean_toc.xsl" />
+                    <echo message="Copying images in cross-plug-in subdirectores ..." />
+                    <copy failonerror="true" todir="${output.dir}">
+                        <fileset dir="${project.dir}${file.separator}normalized">
+                            <include name="**/*.svg" />
+                            <include name="**/*.gif" />
+                            <include name="**/*.jpg" />
+                            <include name="**/*.png" />
+                            <exclude name="**/*.properties" />
+                            <exclude name="**/*.list" />
+                            <exclude name="delta.gif" />
+                            <exclude name="deltaend.gif" />
+                            <exclude name="topic/**" />
+                            <exclude name="images/**" />
+                            <exclude name="**/*.xml" />
+                        </fileset>
+                    </copy>
+                </then>
+            </elseif>
+            <else>
+                <echo message="Cannot find 'normalized' directory or its subdirectories." />
+            </else>
+        </if>
+
+        <!-- Copy Dinkum HTML files. -->
+        <if>
+            <available file="${project.dir}${file.separator}topic${file.separator}c99" type="dir" />
+            <then>
+                <echo>Processing ${folder.name} files ...</echo>
+                <xslt basedir="${project.dir}${file.separator}normalized" destdir="${output.dir}"
+                    extension=".xml" force="true" includes="*.xml" excludes="plugin.xml, index.xml"
+                    style="${dita.dir}${file.separator}plugins${file.separator}com.qnx.dita.transform.safetytables${file.separator}xsl${file.separator}clean_toc.xsl" />
+                <copy failonerror="true" todir="${output.dir}/topic">
+                    <fileset dir="${project.dir}${file.separator}topic" />
+                </copy>
+            </then>
+        </if>
+
+        <!-- Copy ditamaps. -->
+        <echo message="Copying ditamaps ... " />
+        <copy todir="${ndk.out.dir}${file.separator}${folder.name}">
+            <fileset dir="${project.dir}">
+                <include name="**/*.ditamap" />
+                <exclude name="**/book.ditamap" />
+                <exclude name="**/temp/**" />
+                <exclude name="**/images/**" />
+                <exclude name="**/*.xml" />
+            </fileset>
+        </copy>
+
+        <!-- Copy top-level ditamap files. 
+            Temporary copying action -/- until I modify the main NNDK packaging script to call a
+            separate target only once, rather than for each plug-in. -->
+        <copy todir="${ndk.out.dir}">
+            <fileset dir="${project.dir}${file.separator}..${file.separator}">
+                <include name="bps_lib_ref.ditamap" />
+                <include name="screen_lib_ref.ditamap" />
+                <include name="libimg_lib_ref.ditamap" />
+                <include name="ndk_devguide.ditamap" />
+            </fileset>
+        </copy>
+
+        <!-- Clean up temporary directories. -->
+        <echo message="Cleaning up temporary directories." />
+        <delete includeEmptyDirs="true">
+            <fileset dir="normalized" />
+            <fileset dir="temp" />
+        </delete>
+
+    </target>
+
+    <!-- Target to generate valid DITA files from Doxygen XML source. -->
+    <target depends="getPluginName" description="Generate valid DITA files from Doxygen XML."
+        name="doxy2dita">
+        <echo message="*****************************************************************" />
+        <echo message="* Generate valid DITA files from Doxygen XML." />
+        <echo message="*****************************************************************" />
+        <echo message="${folder.name}" />
+        <echo message="Operating system: ${os.name}"/>
+        
+        <property name="doxysrc" value="${project.dir}${file.separator}src${file.separator}xml${file.separator}" />
+        <property name="doxyout" value="${project.dir}${file.separator}topic${file.separator}" />
+        
+        <property name="libname" value="SPECIFY LIBRARY NAME" />
+        
+        <property name="headerloc" value="SPECIFY HEADER LOCATION" />
+        
+        <echo>Copying Doxygen XML files to staging directory ...</echo>
+        <mkdir dir="staging_1" />
+        <copy flatten="true" todir="staging_1">
+            <fileset dir="${doxysrc}">
+                <include name="**/*_8h.xml" />
+                <include name="**/indexpage.xml" />
+                <include name="**/struct*.xml" />
+                <include name="**/coresocial*.xml" />
+                <include name="**/scoreloop*.xml" />
+                <include name="**/group*.xml" />
+                <include name="**/guide*.xml" />
+                <include name="**/csdk*.xml" />
+                <include name="**/integration*.xml" />
+                <include name="**/*app.xml" />
+                <exclude name="**/scoreloopcore_8h.xml" />
+                <!--<include name="**/*.xml" />-->
+            </fileset>
+        </copy>
+        
+        <echo>Processing Doxygen XML files in staging directory -- creating DITA topics ...</echo>
+        <mkdir dir="staging_2" />
+        <xslt basedir="${project.dir}${file.separator}staging_1"
+            destdir="${project.dir}${file.separator}staging_2"
+            extension=".xml" includes="**/*.xml" excludes="plugin.xml, index.xml"
+            style="${dita.dir}${file.separator}plugins${file.separator}com.qnx.dita.transform.safetytables${file.separator}xsl${file.separator}doxygen2dita.xsl"
+            >
+            <param expression="${doxyout}" name="outdir" />
+            <param expression="${folder.name}" name="pluginName" />
+            <param expression="file:///${doxysrc}" name="srcdir" />
+            <param expression="${libname}" name="library"/>
+            <param expression="${headerloc}" name="headerlocn"/>
+        </xslt>
+        
+        <echo>Creating 'about' (introductory) topics ...</echo>
+        <mkdir dir="staging_3" />
+        <xslt basedir="${project.dir}${file.separator}staging_1"
+            destdir="${project.dir}${file.separator}staging_3"
+            extension=".xml" includes="**/*.xml" excludes="plugin.xml, index.xml"
+            style="${dita.dir}${file.separator}plugins${file.separator}com.qnx.dita.transform.safetytables${file.separator}xsl${file.separator}doxyabout2dita.xsl" >
+            <param expression="${doxyout}" name="outdir" />
+            <param expression="about" name="mode-name" />
+        </xslt>
+
+        <!-- Create basic, unstructured ditamap.  Run this section once only -/- when creating a plug-in 
+        from the Doxygen source for the first time. -->
+        <!--<echo message="Creating basic, unstructured ditamap ..." />
+                
+        <property name="pyscript" value="${dita.dir}${file.separator}plugins${file.separator}com.qnx.dita.transform.safetytables${file.separator}ext${file.separator}dir_list_xml${file.separator}src${file.separator}dirListXml.py" />
+        <property name="pyargs" value="${project.dir}${file.separator}topic ${project.dir}${file.separator}staging_3${file.separator}list2.xml" />
+        
+        <touch file="${project.dir}${file.separator}staging_3${file.separator}list2.xml" />
+        
+        <exec executable="python" os="Mac OS X">
+            <arg line="${pyscript} ${pyargs}" />
+        </exec>
+        
+        <exec executable="python" os="Windows 7">
+            <arg line="${pyscript} ${pyargs}" />
+        </exec>       
+        
+        <xslt in="staging_3${file.separator}list2.xml" out="main-new.ditamap"
+            style="${dita.dir}${file.separator}plugins${file.separator}com.qnx.dita.transform.safetytables${file.separator}xsl${file.separator}doxy2ditamap.xsl">
+            <param expression="${folder.name}" name="plug-in" />
+        </xslt>-->
+        
+        <delete includeEmptyDirs="true">
+            <fileset dir="staging_1" />
+            <fileset dir="staging_2" />
+            <fileset dir="staging_3" />
+        </delete>
+
+    </target>
+
+    <!-- Create Neutrino Library Reference Safety tables for NDK. -->
+    <target description="Creates Neutrino lib ref safety tables (NDK)." name="ndkSafetyTables">
+        
+        <echo message="Deleting staging directories ..." />
+        <delete includeEmptyDirs="true" quiet="true">
+            <fileset dir="staging_1" />
+            <fileset dir="staging_2" />
+        </delete>
+
+        <property name="args.input" value="${basedir}${file.separator}main.ditamap" />
+
+        <property name="docsetType" value="NDK" />
+
+        <echo message="*****************************************************************" />
+        <echo message="* Creating library reference safety tables -- NDK." />
+        <echo message="*****************************************************************" />
+
+        <echo message="Creating staging directories ..." />
+        <mkdir dir="staging_1" />
+        <copy flatten="true" todir="staging_1">
+            <fileset dir="${project.dir}${file.separator}topic${file.separator}">
+                <include name="*/**" />
+                <exclude name="*/*.html" />
+                <exclude name="*/*.sgm" />
+                <exclude name="*" />
+            </fileset>
+        </copy>
+        <mkdir dir="staging_2" />
+
+        <echo message="Creating list of NDK topics ..." />
+        <xslt in="${project.dir}${file.separator}main.ditamap" out="staging_2/list.xml"
+            style="${dita.dir}${file.separator}plugins${file.separator}com.qnx.dita.transform.safetytables${file.separator}xsl${file.separator}safety_table_list.xsl">
+            <param expression="${docsetType}" name="docSetType" />
+            <param expression="${project.dir}${file.separator}staging_1${file.separator}"
+                name="listPath" />
+        </xslt>
+
+        <echo message="Concatenating all topics in list ..." />
+        <xslt in="staging_2/list.xml" out="staging_2/concatenated(1)_data.xml"
+            style="${dita.dir}${file.separator}plugins/com.qnx.dita.transform.safetytables/xsl/concatenate_files.xsl"> </xslt>
+
+        <echo message="Preprocessing hrefs ..." />
+        <xslt in="staging_2/concatenated(1)_data.xml" out="staging_2/concatenated_data.xml"
+            style="${dita.dir}${file.separator}plugins/com.qnx.dita.transform.safetytables/xsl/prep_hrefs.xsl"> </xslt>
+
+        <echo message="Generating safety tables ..." />
+        <xslt in="staging_2/concatenated_data.xml" out="staging_2/dummy.xml"
+            style="${dita.dir}${file.separator}plugins/com.qnx.dita.transform.safetytables/xsl/safety_table.xsl">
+            <param
+                expression="${dita.dir}${file.separator}..${file.separator}DITASource/com.qnx.doc.neutrino.lib_ref/topic"
+                name="outdir" />
+        </xslt>
+
+        <echo message="Deleting staging directories ..." />
+        <!--<delete includeEmptyDirs="true">
+            <fileset dir="staging_1" />
+            <fileset dir="staging_2" />
+        </delete>-->
+
+    </target>
+
+    <!-- Create Neutrino Library Reference Safety tables for SDP. -->
+    <target description="Creates Neutrino lib ref safety tables (SDP)." name="sdpSafetyTables">
+        
+        <echo message="Deleting staging directories ..." />
+        <delete includeEmptyDirs="true" quiet="true">
+            <fileset dir="staging_1" />
+            <fileset dir="staging_2" />
+        </delete>
+
+        <property name="args.input" value="${basedir}${file.separator}main.ditamap" />
+
+        <property name="docsetType" value="SDP" />
+
+        <echo message="*****************************************************************" />
+        <echo message="* Creating library reference safety tables -- SDP." />
+        <echo message="*****************************************************************" />
+
+        <echo message="Creating staging directories ..." />
+        <mkdir dir="staging_1" />
+        <copy flatten="true" todir="staging_1">
+            <fileset dir="${project.dir}${file.separator}topic${file.separator}">
+                <include name="*/**" />
+                <exclude name="*/*.html" />
+                <exclude name="*/*.sgm" />
+                <exclude name="*" />
+            </fileset>
+        </copy>
+        <mkdir dir="staging_2" />
+
+        <echo message="Creating list of SDP topics ..." />
+        <xslt in="${project.dir}${file.separator}main.ditamap" out="staging_2/list.xml"
+            style="${dita.dir}${file.separator}plugins${file.separator}com.qnx.dita.transform.safetytables${file.separator}xsl${file.separator}safety_table_list.xsl">
+            <param expression="${docsetType}" name="docSetType" />
+            <param expression="${project.dir}${file.separator}staging_1${file.separator}"
+                name="listPath" />
+        </xslt>
+
+        <echo message="Concatenating all topics in list ..." />
+        <xslt in="staging_2/list.xml" out="staging_2/concatenated(1)_data.xml"
+            style="${dita.dir}${file.separator}plugins/com.qnx.dita.transform.safetytables/xsl/concatenate_files.xsl"> </xslt>
+
+        <echo message="Preprocessing hrefs ..." />
+        <xslt in="staging_2/concatenated(1)_data.xml" out="staging_2/concatenated_data.xml"
+            style="${dita.dir}${file.separator}plugins/com.qnx.dita.transform.safetytables/xsl/prep_hrefs.xsl"> </xslt>
+
+        <echo message="Generating safety tables ..." />
+        <xslt in="staging_2/concatenated_data.xml" out="staging_2/dummy.xml"
+            style="${dita.dir}${file.separator}plugins/com.qnx.dita.transform.safetytables/xsl/safety_table.xsl">
+            <param
+                expression="${dita.dir}${file.separator}..${file.separator}DITASource/com.qnx.doc.neutrino.lib_ref/topic"
+                name="outdir" />
+        </xslt>
+
+        <echo message="Deleting staging directories ..." />
+        <delete includeEmptyDirs="true">
+            <fileset dir="staging_1" />
+            <fileset dir="staging_2" />
+        </delete>
+
+    </target>
+    
+    <!-- Test XSLT replacement for dita_parser -->
+    <target name="dita2xhtml_microsite" depends="getPluginName, integrate, validatePlugin">
+        
+        <!-- PRE-PROCESS START -->
+        
+        <!-- PRE-PROCESS END -->
+        <ant antfile="${dita.dir}${file.separator}build.xml" target="init">
+            <!--<property name="dita.temp.dir" value="${temp}${file.separator}${path}${file.separator}temp"/>-->
+            <property name="tempdir" value="${ndk.out.dir}${file.separator}${folder.name}temp" />
+            <property name="args.input" value="${basedir}${file.separator}${ditamap.dita}" />
+            <property name="output.dir" value="${dita.out.dir}${file.separator}${plug-in.name}" />
+            <property name="transtype" value="xhtml"/>
+            <property name="args.xsl.map" value="${dita.plugin.rim.xhtml.microsite.dir}/xsl/shell-map.xsl"/>
+            <property name="args.xsl" value="${dita.plugin.rim.xhtml.microsite.dir}/xsl/shell.xsl"/>            
+        </ant>
+        
+        <!-- POST-PROCESS START -->
+        <rename src="${dita.out.dir}${file.separator}${plug-in.name}${file.separator}index.html"
+            dest="${dita.out.dir}${file.separator}${plug-in.name}${file.separator}menu-docs.php"/>
+        
+        <!-- POST-PROCESS END -->
+    </target>
+
+<!-- Create libhover context-sensitive help binary. -->
+    <target description="Creates binary for libhover context-sensitive help." name="libhover">
+
+        <echo message="*****************************************************************"/>
+        <echo message="* Create libhover context-sensitive help binary."/>
+        <echo message="*****************************************************************"/>
+
+        <echo message="Creating staging directories ..."/>
+        <mkdir dir="${project.dir}${file.separator}staging_1"/>
+        <mkdir dir="${project.dir}${file.separator}staging_2"/>
+        <mkdir dir="${project.dir}${file.separator}staging_3"/>
+
+        <copy flatten="true" todir="${project.dir}${file.separator}staging_1">
+            <fileset dir="${project.dir}${file.separator}topic${file.separator}">
+                <include name="*/**"/>
+                <include name="*.xml"/>
+                <exclude name="*/*.html"/>
+                <exclude name="*/*.sgm"/>
+                <exclude name="**/about*"/>
+                <exclude name="**/overview*"/>
+                <exclude name="**/*overview*"/>
+                <exclude name="**/SC_TYPEINFO*"/>
+                <!--<exclude name="*"/>-->
+            </fileset>
+        </copy>
+
+        <echo message="Processing files in staging directory -- creating libhover topics ..."/>
+        <xslt basedir="${project.dir}${file.separator}staging_1"
+            destdir="${project.dir}${file.separator}staging_2" extension=".xml" includes="**/*.xml"
+            excludes="plugin.xml, index.xml"
+            style="${dita.dir}${file.separator}plugins${file.separator}com.qnx.dita.transform.safetytables${file.separator}xsl${file.separator}libhover.xsl">
+            <param expression="${project.dir}${file.separator}topic${file.separator}" name="outdir"/>
+            <param expression="${folder.name}" name="pluginName"/>
+            <param expression="${project.dir}${file.separator}src${file.separator}xml${file.separator}"
+                   name="srcdir"/>
+        </xslt>
+
+        <echo message="Creating list of files in staging directory ..."/>
+        <touch file="${project.dir}${file.separator}staging_3${file.separator}list.xml"/>
+        <!-- Mac OS X -->
+        <!--<exec executable="${dita.dir}${file.separator}plugins${file.separator}com.qnx.dita.transform.safetytables${file.separator}ext${file.separator}dir_list_xml${file.separator}src${file.separator}dirListXml.py">
+            <arg line="${project.dir}${file.separator}staging_2 ${project.dir}${file.separator}staging_3${file.separator}list.xml" />
+        </exec>-->
+
+        <!-- Mac OS X and Windows? -->
+        <exec executable="python">
+            <arg
+                line="${dita.dir}${file.separator}plugins${file.separator}com.qnx.dita.transform.safetytables${file.separator}ext${file.separator}dir_list_xml${file.separator}src${file.separator}dirListXml.py"/>
+            <arg
+                line="${project.dir}${file.separator}staging_2 ${project.dir}${file.separator}staging_3${file.separator}list.xml"
+            />
+        </exec>
+
+        <echo message="Concatenating files  ..."/>
+        <xslt in="staging_3${file.separator}list.xml" out="${project.dir}${file.separator}input.xml"
+              style="${dita.dir}${file.separator}plugins${file.separator}com.qnx.dita.transform.safetytables${file.separator}xsl${file.separator}concatenate_libhover.xsl">
+            <param expression="${project.dir}${file.separator}staging_2${file.separator}"
+                   name="indir"/>
+        </xslt>
+
+        <echo message="Deleting staging directories ..."/>
+        <delete includeEmptyDirs="true">
+            <fileset dir="${project.dir}${file.separator}staging_1"/>
+            <fileset dir="${project.dir}${file.separator}staging_2"/>
+            <fileset dir="${project.dir}${file.separator}staging_3"/>
+        </delete>
+
+        <echo message="Create libhover binary file." />
+        <property name="output.path" location="${project.dir}${file.separator}output.libhover"/>
+        <property name="input.path" location="${project.dir}${file.separator}input.xml"/>
+
+        <java classname="org.eclipse.linuxtools.cdt.libhover.utils.BuildFunctionInfos">
+            <classpath>
+                <pathelement location="..${file.separator}buildfiles${file.separator}BuildFunctionInfos.jar"/>
+                <pathelement path="${java.class.path}"/>
+                <!--<pathelement path="${env.CLASSPATH}"/>-->
+            </classpath>
+            <arg value="${input.path}"/>
+            <arg value="${output.path}"/>
+        </java>
+
+    </target>
+
+<target name="nobundle" description="Remove libhover bundle info from METAINF.MF file.">
+        
+        <echo message="Removing bundle info from MANIFEST.MF ..." />
+        
+        <!--<property name="manifest.file" location="${dita.out.dir}${file.separator}${plug-in.name}/META-INF/MANIFEST.MF" />
+        
+        <script language="javascript"><![CDATA[
+    importPackage(java.io);
+    importPackage(java.util.jar);
+    
+    // read the manifest
+    manifestFile = new File(project.getProperty('manifest.file'));
+    manifest = new Manifest();
+    is = new FileInputStream(manifestFile);
+    manifest.read(is);
+    is.close();
+    
+    // remove the offending attribute
+    manifest.getMainAttributes().remove(new Attributes.Name('Require-Bundle'));
+    
+    // write back to the original file
+    os = new FileOutputStream(manifestFile);
+    manifest.write(os);
+    os.close();
+]]></script>-->
+        
+        <replaceregexp file="${dita.out.dir}${file.separator}${plug-in.name}${file.separator}META-INF${file.separator}MANIFEST.MF" 
+                      match='Require-Bundle: org.eclipse.linuxtools.cdt.libhover;bundle-version=\"[^\"]+\"[\r\n]*' 
+                      replace="" 
+                      flags="m"/>
+        
+    </target>
+
+</project>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en-us" xml:lang="en-us">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="security" content="public" />
+<meta name="Robots" content="index,follow" />
+<meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
+<meta name="DC.Type" content="reference" />
+<meta name="DC.Title" content="Design patterns for architectural discovery analysis" />
+<meta name="abstract" content="The Design Patterns rule category for architectural analysis contains commonly seen solutions or pitfalls in designing and writing source code, including some of the classic Gang of Four patterns." />
+<meta name="description" content="The Design Patterns rule category for architectural analysis contains commonly seen solutions or pitfalls in designing and writing source code, including some of the classic Gang of Four patterns." />
+<meta name="DC.subject" content="design patterns rule category, architectural discovery, architectural discovery, design patterns rule category, rule categories, design patterns" />
+<meta name="keywords" content="design patterns rule category, architectural discovery, architectural discovery, design patterns rule category, rule categories, design patterns" />
+<meta name="DC.Relation" scheme="URI" content="../topics/rarchdiscref.html" />
+<meta name="copyright" content="(C) Copyright IBM Corporation 2004 2007" />
+<meta name="DC.Rights.Owner" content="(C) Copyright IBM Corporation 2004 2007" />
+<meta name="DC.Format" content="XHTML" />
+<meta name="DC.Identifier" content="rdesignpatterns" />
+<meta name="DC.Language" content="en-us" />
+<!-- All rights reserved. Licensed Materials Property of IBM -->
+<!-- US Government Users Restricted Rights -->
+<!-- Use, duplication or disclosure restricted by -->
+<!-- GSA ADP Schedule Contract with IBM Corp. -->
+<link rel="stylesheet" type="text/css" href="../ibmdita.css" />
+<link rel="stylesheet" type="text/css" href="../swg_info_common.css" />
+<link rel="Start" href="../topics/rarchdiscref.html" />
+<title>Design patterns for architectural discovery analysis</title>
+</head>
+<body id="rdesignpatterns"><a name="rdesignpatterns"><!-- --></a>
+<h1 class="topictitle1">Design patterns for architectural discovery analysis</h1>
+<div><p>The Design Patterns rule category for architectural analysis contains
+commonly seen solutions or pitfalls in designing and writing source code,
+including some of the classic Gang of Four patterns.</p>
+<div class="section"><h2 class="sectiontitle">Purpose</h2><p>The following table lists each pattern,
+and its purpose, in the Design Patterns category:</p>
+</div>
+<table cellpadding="4" cellspacing="0" summary="" border="1" class="simpletableborder"><tr><th valign="bottom" align="left" id="d0e34">Pattern</th>
+<th valign="bottom" align="left" id="d0e36">Purpose</th>
+</tr>
+<tr><td valign="top" headers="d0e34">Decorator</td>
+<td valign="top" headers="d0e36">The Decorator pattern adds responsibilities to an object dynamically,
+without changing its interface. The Decorator pattern acts as a wrapper because
+it implements the original interface, adds capabilities, and delegates work
+to the original object, so you can use it as an alternative to creating a
+subclass. The architectural discovery algorithm identifies this pattern as
+consisting of two classes: Decorator and the wrapped component. </td>
+</tr>
+<tr><td valign="top" headers="d0e34">Factory Method</td>
+<td valign="top" headers="d0e36">The Factory Method pattern defines an interface for creating objects
+without knowing the class of the object it creates. Each Factory Method pattern
+can define the class to be instantiated based on the input parameters and
+specifics of the situation. The architectural discovery algorithm identifies
+this pattern as consisting of Creator class, Concrete Creator subclass, Product
+interface, and Concrete Product object. The Creator class specifies the interface
+for creating a Product. The Concrete Creator subclass implements this interface
+by instantiating a Concrete Product object.</td>
+</tr>
+<tr><td valign="top" headers="d0e34">Marker</td>
+<td valign="top" headers="d0e36">The Marker pattern declares a semantic attribute of a class. The
+architectural discovery algorithm identifies the Marker pattern as a single
+empty interface without methods or constants. </td>
+</tr>
+<tr><td valign="top" headers="d0e34">Observer/Observable</td>
+<td valign="top" headers="d0e36">The Observer/Observable pattern communicates the changes in the state
+of an object to other system objects. The architectural discovery algorithm
+identifies this pattern as consisting of Observer and Observable. The Observable
+class maintains a list of Observer classes that it notifies when a state change
+occurs. </td>
+</tr>
+<tr><td valign="top" headers="d0e34">Singleton</td>
+<td valign="top" headers="d0e36">The Singleton pattern ensures that a class allows only one object
+instance. The architectural discovery algorithm identifies the Singleton pattern
+as a class with a private constructor and a public static field or method
+that provides global access to the instance of a Singleton class.</td>
+</tr>
+<tr><td valign="top" headers="d0e34">Utility</td>
+<td valign="top" headers="d0e36">The Utility pattern models a stateless utility function. The architectural
+discovery algorithm identifies Utility as a class with a private constructor
+that contains only static methods. </td>
+</tr>
+<tr><td valign="top" headers="d0e34">Visitor</td>
+<td valign="top" headers="d0e36">The Visitor pattern performs specific operations on the elements
+of an object structure. The Visitor pattern allows additional operations without
+changing the classes of the elements on which they operate. The architectural
+discovery algorithm identifies the Visitor pattern as consisting of Visitor
+class, Concrete Visitor subclass, Element (optional) class, and Concrete Element
+subclass. The Visitor pattern is an interface that declares the Visit operation
+for every element. The Concrete Visitor subclass implements the Visitor interface
+and acts on each Concrete Element subclass.</td>
+</tr>
+</table>
+</div>
+<div>
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a href="../topics/rarchdiscref.html" title="The Architectural Discovery for Java domain comprises four rule categories that contain the rules for identifying patterns and antipatterns in Java source code. This section contains topics that describe the patterns that an architectural discovery analysis can detect automatically.">Architectural discovery patterns</a></div>
+</div>
+</div></body>
+</html>

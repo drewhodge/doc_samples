@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en-us" xml:lang="en-us">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="security" content="public" />
+<meta name="Robots" content="index,follow" />
+<meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
+<meta name="DC.Type" content="task" />
+<meta name="DC.Title" content="Analyzing source code through static analysis" />
+<meta name="abstract" content="In IBM Rational products, the analysis framework provides static analysis capabilities to integrate several analysis domains. Each domain can supply tools that provide different forms of analysis, such as code review or architectural discovery, but the interface for the tools remains consistent." />
+<meta name="description" content="In IBM Rational products, the analysis framework provides static analysis capabilities to integrate several analysis domains. Each domain can supply tools that provide different forms of analysis, such as code review or architectural discovery, but the interface for the tools remains consistent." />
+<meta name="DC.subject" content="static analysis, overview, source code, analysis, static, code" />
+<meta name="keywords" content="static analysis, overview, source code, analysis, static, code" />
+<meta name="DC.Relation" scheme="URI" content="../topics/cstaticanalysis.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/canalysisrules.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/canalysisresults.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tcustpersp.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tcreateconfig.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tcustrulescats.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tcreaterulefile.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tcreatereps.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/cstaticanalysis.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/canalysisrules.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/canalysisresults.html" />
+<meta name="copyright" content="(C) Copyright IBM Corporation 2004 2007" />
+<meta name="DC.Rights.Owner" content="(C) Copyright IBM Corporation 2004 2007" />
+<meta name="DC.Format" content="XHTML" />
+<meta name="DC.Identifier" content="tanalyzesourcecode" />
+<meta name="DC.Language" content="en-us" />
+<!-- All rights reserved. Licensed Materials Property of IBM -->
+<!-- US Government Users Restricted Rights -->
+<!-- Use, duplication or disclosure restricted by -->
+<!-- GSA ADP Schedule Contract with IBM Corp. -->
+<link rel="stylesheet" type="text/css" href="../ibmdita.css" />
+<link rel="stylesheet" type="text/css" href="../swg_info_common.css" />
+<title>Analyzing source code through static analysis</title>
+</head>
+<body id="tanalyzesourcecode"><a name="tanalyzesourcecode"><!-- --></a>
+<h1 class="id_title_id">Analyzing source code through static analysis</h1>
+<div><p class="id_shortdesc_id"><em class="anchor_top_anchor"></em>In IBM<sup>®</sup> Rational<sup>®</sup> products,
+the analysis framework provides static analysis capabilities to integrate
+several analysis domains. Each domain can supply tools that provide different
+forms of analysis, such as code review or architectural discovery, but the
+interface for the tools remains consistent.</p>
+<div class="id_prereq_id"> <em class="anchor_prereq_anchor"></em></div>
+<div class="section">Using analysis configurations that specify domains, rules, and the
+scope of an analysis, you can run static analyses of the resources that you
+work with to detect violations of rules and rule categories, or to look for
+patterns and antipatterns in source code. An analysis generates a list of
+categorized results in an <span class="wintitle">Analysis Results</span> view.<p>The
+analysis framework enables both independent tool vendors and anyone writing
+new tools to integrate different forms of analysis without changing how to
+perform analysis operations.</p>
+</div>
+<div class="id_postreq_id"><em class="anchor_postreq_anchor"></em> <em class="anchor_bottom_anchor"></em></div>
+</div>
+<div>
+<ul class="ullinks">
+<li class="ulchildlink"><strong><a href="../topics/cstaticanalysis.html">Static analysis</a></strong><br />
+In IBM Rational products, you can use the static analysis capabilities to analyze the components and resources of an application without having to run the application.</li>
+<li class="ulchildlink"><strong><a href="../topics/canalysisrules.html">Rules and rule categories for static analysis</a></strong><br />
+<em class="anchor_top_anchor"></em>Rules are the smallest building blocks of a static analysis configuration. Each analysis configuration applies different rules, or sets of rules, that define the conditions that generate results and that assess the quality, or determine the structure, of resources. A rule category is a collection of analysis rules, or other categories, that focuses on a particular aspect of standards compliance, or on an accepted practice.</li>
+<li class="ulchildlink"><strong><a href="../topics/canalysisresults.html">Static analysis results</a></strong><br />
+<em class="anchor_top_anchor"></em>In IBM Rational products, an architectural discovery analysis result identifies a pattern or an antipattern. A code review analysis result is a concise explanation of a rule violation. In either case, the result is a line item in the <span class="wintitle">Analysis Results</span> view that shows that the resource matches, or does not comply with the rules that you applied. </li>
+<li class="ulchildlink"><strong><a href="../topics/tcustpersp.html">Enabling capabilities for static analysis</a></strong><br />
+<em class="anchor_top_anchor"></em>The Java™ and Debug perspectives include analysis capabilities by default, but you can add analysis capabilities to any other perspective if you want to run a static analysis on resources other than Java source code files.</li>
+<li class="ulchildlink"><strong><a href="../topics/tcreateconfig.html">Creating and editing static analysis configurations</a></strong><br />
+<em class="anchor_top_anchor"></em>In IBM Rational products, you can create an analysis configuration that specifies the domain, rule categories, and rules with which to analyze your resources. </li>
+<li class="ulchildlink"><strong><a href="../topics/tcustrulescats.html">Creating custom rule categories and rules for static analysis</a></strong><br />
+<em class="anchor_top_anchor"></em>In IBM Rational products, you can create custom rule categories and custom rules to add to an analysis configuration in addition to those supplied by analysis providers. For example, a Java development team might use a specific set of providers, rule categories, and rules defined in a custom rules file to analyze source code.</li>
+<li class="ulchildlink"><strong><a href="../topics/tcreaterulefile.html">Creating rules files</a></strong><br />
+You can create rules files that contain sets of rules to apply during a static analysis code review that you can run outside a standard analysis configuration at the command line, or in an Ant script.</li>
+<li class="ulchildlink"><strong><a href="../topics/tcreatereps.html">Creating reports from static analysis results</a></strong><br />
+ <em class="anchor_top_anchor"></em> After you run an analysis configuration and generate results, you can capture the results in HTML-format reports. </li>
+</ul>
+<div class="relconcepts"><strong>Related concepts</strong><br />
+<div><a href="../topics/cstaticanalysis.html" title="In IBM Rational products, you can use the static analysis capabilities to analyze the components and resources of an application without having to run the application.">Static analysis</a></div>
+<div><a href="../topics/canalysisrules.html" title="Rules are the smallest building blocks of a static analysis configuration. Each analysis configuration applies different rules, or sets of rules, that define the conditions that generate results and that assess the quality, or determine the structure, of resources. A rule category is a collection of analysis rules, or other categories, that focuses on a particular aspect of standards compliance, or on an accepted practice.">Rules and rule categories for static analysis</a></div>
+<div><a href="../topics/canalysisresults.html" title="In IBM Rational products, an architectural discovery analysis result identifies a pattern or an antipattern. A code review analysis result is a concise explanation of a rule violation. In either case, the result is a line item in the Analysis Results view that shows that the resource matches, or does not comply with the rules that you applied.">Static analysis results</a></div>
+</div>
+</div></body>
+</html>

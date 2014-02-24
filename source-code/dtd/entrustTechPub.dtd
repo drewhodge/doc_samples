@@ -1,0 +1,225 @@
+<!-- ....................................................................... -->
+<!-- Toolkit Driver DTD  ................................................... -->
+<!-- Filename: tk_mod_eval.dtd
+     Purpose:  This DTD is being used to evaluate the possibility of using
+               the concept of XHTML Modularization for writing DTDs to
+               control the structure of Toolkit documentation.
+               
+     Notes:
+     
+-->
+<!-- ....................................................................... -->
+
+
+<!-- Toolkit Driver DTD
+-->
+<!-- This is the DTD driver for Toolkit API reference documentation.
+
+     Please use this formal public identifier to identify it:
+
+         "-//ENTRUST//DTD XHTML-TKML 1.0//EN"
+
+     Use this namespace for unique elements:
+
+         xmlns:tkml="http://www.entrust.com/DTDs/toolkit.dtd"
+         
+     Note: This DTD is not likely to be used in the public domain so there is 
+     little need for an FPI.  The FPI is specified to maintain GPP. ~~ dwh.
+     
+-->
+<!ENTITY % XHTML.version "-//ENTRUST//DTD XHTML-TKML 1.0//EN" >
+
+<!-- Use this URI to identify the default namespace:
+
+         "http://www.w3.org/1999/xhtml"
+-->
+<!ENTITY % XHTML.ns "http://www.w3.org/1999/xhtml" >
+
+<!-- Reserved for use with the XLink namespace:
+-->
+<!ENTITY % XLINK.ns "" >
+<!ENTITY % XLinkns.attrib "" >
+
+
+<!-- Reserved for future use with document profiles 
+     (http://www.w3.org/TR/1999/WD-xhtml-prof-req-19990906/)
+-->
+<!ENTITY % XHTML.profile "" >
+
+<!-- Internationalization features
+     This feature-test entity is used to declare elements
+     and attributes used for internationalization support.
+-->
+<!ENTITY % XHTML.I18n "IGNORE" >
+
+
+<!-- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+
+
+<!-- Commented ~~ dwh.
+     
+     Redeclare Misc.extra to include myelement to hook it into the
+     content model.
+
+
+<!ENTITY % Misc.extra
+     "| script | noscript | myml:myelement" > -->
+     
+
+<!-- Define the Content Model 
+     This content model can be modified or replaced simply by
+     changing the following ENTITY declaration.
+-->
+<!ENTITY % xhtml-model.mod
+     PUBLIC "-//ENTRUST//ELEMENTS XHTML 1.1 Toolkit Document Model 1.0//EN"
+     "tkdoc-model-1.mod" >
+
+<!-- Pre-Framework Redeclaration placeholder  .................... -->
+<!-- This serves as a location to insert markup declarations (if any)
+     into the DTD prior to the framework declarations.
+-->
+<!ENTITY % xhtml-prefw-redecl.module "IGNORE" >
+<![%xhtml-prefw-redecl.module;[
+%xhtml-prefw-redecl.mod;
+<!-- end of xhtml-prefw-redecl.module -->]]>
+
+<!-- The events module should be included here if needed. In this
+     skeleton it is IGNOREd.
+-->
+<!ENTITY % xhtml-events.module "IGNORE" >
+
+<!-- Modular Framework Module  ................................... -->
+<!ENTITY % xhtml-framework.module "INCLUDE" >
+<![%xhtml-framework.module;[
+<!ENTITY % xhtml-framework.mod
+     PUBLIC "-//W3C//ENTITIES XHTML 1.1 Modular Framework 1.0//EN"            
+     "xhtml11-framework-1.mod" >
+%xhtml-framework.mod;]]>
+
+<!-- Post-Framework Redeclaration placeholder  ................... -->
+<!-- This serves as a location to insert markup declarations (if any) 
+     into the DTD following the framework declarations.
+-->
+<!ENTITY % xhtml-postfw-redecl.module "IGNORE" >
+<![%xhtml-postfw-redecl.module;[
+%xhtml-postfw-redecl.mod;
+<!-- end of xhtml-postfw-redecl.module -->]]>
+
+<!-- Hypertext Module (required) ................................. -->
+<!ENTITY % xhtml-hypertext.module "INCLUDE" >
+<![%xhtml-hypertext.module;[
+<!ENTITY % xhtml-hypertext.mod
+     PUBLIC "-//W3C//ELEMENTS XHTML 1.1 Hypertext 1.0//EN"
+     "xhtml11-hypertext-1.mod" >
+%xhtml-hypertext.mod;]]>
+
+<!-- Lists Module (required)  .................................... -->
+<!ENTITY % xhtml-list.module "INCLUDE" >
+<![%xhtml-list.module;[
+<!ENTITY % xhtml-list.mod
+     PUBLIC "-//W3C//ELEMENTS XHTML 1.1 Lists 1.0//EN"
+     "xhtml11-list-1.mod" >
+%xhtml-list.mod;]]>
+
+<!-- Document Structure Module (required)  ....................... -->
+<!ENTITY % xhtml-struct.module "INCLUDE" >
+<![%xhtml-struct.module;[
+<!ENTITY % xhtml-struct.mod
+     PUBLIC "-//W3C//ELEMENTS XHTML 1.1 Document Structure 1.0//EN"
+     "xhtml11-struct-1.mod" >
+%xhtml-struct.mod;]]>
+
+
+<!-- Basic Text Module (required)  ............................... -->
+<!ENTITY % xhtml-text.module "INCLUDE" >
+<![%xhtml-text.module;[
+<!ENTITY % xhtml-text.mod
+     PUBLIC "-//W3C//ELEMENTS XHTML 1.1 Basic Text 1.0//EN"
+     "xhtml11-text-1.mod" >
+%xhtml-text.mod;]]>
+
+
+<!-- ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: -->
+
+
+<!-- Custom modules can be included here using the form defined above.
+     Be sure to include the public FPI definition in the catalog file (and 
+     the extid.map file for XMetaL)for each module defined. Also include 
+     W3C-defined modules at this point.
+-->
+
+<!-- Toolkit Modules
+-->
+
+<!-- Toolkit Common Doc Module (entrustDoc) ...................... -->
+<!ENTITY % entrustDoc.module "INCLUDE" >
+<![%entrustDoc.module;[
+<!ENTITY % entrustDoc.mod
+     PUBLIC "-//ENTRUST//ELEMENTS XHTML 1.1 Toolkit Common 1.0//EN"
+     "entrustDoc.mod" >
+%entrustDoc.mod;]]>
+
+<!-- Toolkit CAPI Reference Module (entrustCAPI) ................. -->
+<!ENTITY % entrustCAPI.module "INCLUDE" >
+<![%entrustCAPI.module;[
+<!ENTITY % entrustCAPI.mod
+     PUBLIC "-//ENTRUST//ELEMENTS XHTML 1.1 Toolkit C API 1.0//EN"
+     "entrustCAPI.mod" >
+%entrustCAPI.mod;]]>
+
+<!-- Toolkit API Reference Module (entrustAPI) ................... -->
+<!ENTITY % entrustAPI.module "INCLUDE" >
+<![%entrustAPI.module;[
+<!ENTITY % entrustAPI.mod
+     PUBLIC "-//ENTRUST//ELEMENTS XHTML 1.1 Toolkit API 1.0//EN"
+     "entrustAPI.mod" >
+%entrustAPI.mod;]]>
+
+<!-- Toolkit API Common Module (entrustAPICommon) ................ -->
+<!ENTITY % entrustAPICommon.module "INCLUDE" >
+<![%entrustAPICommon.module;[
+<!ENTITY % entrustAPICommon.mod
+     PUBLIC "-//ENTRUST//ELEMENTS XHTML 1.1 Toolkit API Common 1.0//EN"
+     "entrustAPICommon.mod" >
+%entrustAPICommon.mod;]]>
+
+<!-- Toolkit Primary Build Configuration ......................... -->
+<!ENTITY % buildConfig.module "INCLUDE" >
+<![%buildConfig.module;[
+<!ENTITY % buildConfig.mod
+	 PUBLIC "-//ENTRUST//ELEMENTS XHTML 1.1 Toolkit Build Config 1.0//EN"
+	 "buildConfig.mod" >
+%buildConfig.mod;]]>
+
+<!-- W3C Modules 
+-->
+
+<!-- Tables Module ............................................... -->
+<!ENTITY % xhtml-table.module "INCLUDE" >
+<![%xhtml-table.module;[
+<!ENTITY % xhtml-table.mod
+     PUBLIC "-//W3C//ELEMENTS XHTML 1.1 Tables 1.0//EN"
+     "xhtml11-table-1.mod" >
+%xhtml-table.mod;]]>
+
+<!-- Images Module ............................................... -->
+<!ENTITY % xhtml-images.module "IGNORE" >
+<![%xhtml-images.module;[
+<!ENTITY % xhtml-images.mod
+     PUBLIC "-//W3C//ELEMENTS XHTML 1.1 Images 1.0//EN"
+            "xhtml11-image-1.mod" >
+%xhtml-images.mod;]]>
+
+<!-- Stylesheet Module ........................................... -->
+<!ENTITY % xhtml-style.module "INCLUDE" >
+<![%xhtml-style.module;[
+<!ENTITY % xhtml-style.mod
+     PUBLIC "-//W3C//DTD XHTML 1.1 Stylesheets 1.0//EN"
+            "xhtml11-style-1.mod" >
+%xhtml-style.mod;]]>
+
+<!-- end of Toolkit Driver DTD ............................................. -->
+<!-- ....................................................................... -->
+
+
+

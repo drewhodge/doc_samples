@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en-us" xml:lang="en-us">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="security" content="public" />
+<meta name="Robots" content="index,follow" />
+<meta http-equiv="PICS-Label" content='(PICS-1.1 "http://www.icra.org/ratingsv02.html" l gen true r (cz 1 lz 1 nz 1 oz 1 vz 1) "http://www.rsac.org/ratingsv01.html" l gen true r (n 0 s 0 v 0 l 0) "http://www.classify.org/safesurf/" l gen true r (SS~~000 1))' />
+<meta name="DC.Type" content="concept" />
+<meta name="DC.Title" content="Rules and rule categories for static analysis" />
+<meta name="abstract" content="Rules are the smallest building blocks of a static analysis configuration. Each analysis configuration applies different rules, or sets of rules, that define the conditions that generate results and that assess the quality, or determine the structure, of resources. A rule category is a collection of analysis rules, or other categories, that focuses on a particular aspect of standards compliance, or on an accepted practice." />
+<meta name="description" content="Rules are the smallest building blocks of a static analysis configuration. Each analysis configuration applies different rules, or sets of rules, that define the conditions that generate results and that assess the quality, or determine the structure, of resources. A rule category is a collection of analysis rules, or other categories, that focuses on a particular aspect of standards compliance, or on an accepted practice." />
+<meta name="DC.subject" content="static analysis, rules and rule categories, description, rule providers, analysis, static, severity levels, rules, static analysis, rule categories, severity levels, rule categories" />
+<meta name="keywords" content="static analysis, rules and rule categories, description, rule providers, analysis, static, severity levels, rules, static analysis, rule categories, severity levels, rule categories" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tanalyzesourcecode.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tcreateconfig.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tcustrulescats.html" />
+<meta name="DC.Relation" scheme="URI" content="../topics/tcreaterulefile.html" />
+<meta name="copyright" content="(C) Copyright IBM Corporation 2004 2007" />
+<meta name="DC.Rights.Owner" content="(C) Copyright IBM Corporation 2004 2007" />
+<meta name="DC.Format" content="XHTML" />
+<meta name="DC.Identifier" content="canalysisrules" />
+<meta name="DC.Language" content="en-us" />
+<!-- All rights reserved. Licensed Materials Property of IBM -->
+<!-- US Government Users Restricted Rights -->
+<!-- Use, duplication or disclosure restricted by -->
+<!-- GSA ADP Schedule Contract with IBM Corp. -->
+<link rel="stylesheet" type="text/css" href="../ibmdita.css" />
+<link rel="stylesheet" type="text/css" href="../swg_info_common.css" />
+<link rel="Start" href="../topics/tanalyzesourcecode.html" />
+<title>Rules and rule categories for static analysis</title>
+</head>
+<body id="canalysisrules"><a name="canalysisrules"><!-- --></a>
+<h1 class="id_title_id">Rules and rule categories for static analysis</h1>
+<div><p class="id_shortdesc_id"><em class="anchor_top_anchor"></em>Rules
+are the smallest building blocks of a static analysis configuration. Each
+analysis configuration applies different rules, or sets of rules, that define
+the conditions that generate results and that assess the quality, or determine
+the structure, of resources. A rule category is a collection of analysis rules,
+or other categories, that focuses on a particular aspect of standards compliance,
+or on an accepted practice.</p>
+<div class="section"><h2 class="sectiontitle">Rules</h2><p>A rule is a specific statement that describes
+an action to follow when you write code, or a description of a particular
+solution to a commonly encountered problem in software design.</p>
+<p>The following
+list shows examples of code review rules and architectural discovery patterns:</p>
+<ul><li>Avoid conditional expressions with more than four operators</li>
+<li>Avoid nesting more than one class</li>
+<li>Avoid nesting more than one <samp class="codeph">if</samp> statement</li>
+<li>Factory method</li>
+<li>Inheritance tree</li>
+<li>Component tangle</li>
+<li>Package</li>
+</ul>
+<p>Rules form the basis of an analysis configuration. When you run an
+analysis, you check whether the resources comply with a specific rule, or
+set of rules. You can modify rules and create user-defined rules if you need
+them to apply to specific application design standards. The code review rules
+listed earlier, for example, belong to the design principles category. Rules
+that apply to similar capabilities, or code structures, belong to the same
+category. You can apply rules from several categories depending on the purpose
+of the review. </p>
+</div>
+<div class="section"><h2 class="id_title_id3">Rule categories</h2><p>Analysis
+domains are components of the analysis framework that implement groups of
+tools that contain categories. You can select different domains for different
+types of analysis and, depending on the requirements of your analysis, you
+can enable or disable a rule category and individual rules in the category.</p>
+<p>An
+example of a rule category is the performance category in the Code Review
+for Java™ domain.
+Performance, as an important aspect of the overall quality of an application,
+should be one of the characteristics you test in a code review.  The performance
+rule category has three subcategories, memory, profiling, and speed, each
+of which contains a set of rules that you apply to source code when you run
+an analysis with this category selected.</p>
+<p>An example of a rule category
+in the Architectural Discovery for Java domain is the object-oriented patterns
+category. This category contains rules that identify abstraction and inheritance
+tree patterns, which identify an abstract class or interface and the implementation
+or extension of a class.</p>
+<em class="anchor_bottom_anchor"></em></div>
+</div>
+<div>
+<div class="familylinks">
+<div class="parentlink"><strong>Parent topic:</strong> <a href="../topics/tanalyzesourcecode.html" title="In IBM Rational products, the analysis framework provides static analysis capabilities to integrate several analysis domains. Each domain can supply tools that provide different forms of analysis, such as code review or architectural discovery, but the interface for the tools remains consistent.">Analyzing source code through static analysis</a></div>
+</div>
+<div class="reltasks"><strong>Related tasks</strong><br />
+<div><a href="../topics/tcreateconfig.html" title="In IBM Rational products, you can create an analysis configuration that specifies the domain, rule categories, and rules with which to analyze your resources.">Creating and editing static analysis configurations</a></div>
+<div><a href="../topics/tcustrulescats.html" title="In IBM Rational products, you can create custom rule categories and custom rules to add to an analysis configuration in addition to those supplied by analysis providers. For example, a Java development team might use a specific set of providers, rule categories, and rules defined in a custom rules file to analyze source code.">Creating custom rule categories and rules for static analysis</a></div>
+<div><a href="../topics/tcreaterulefile.html" title="You can create rules files that contain sets of rules to apply during a static analysis code review that you can run outside a standard analysis configuration at the command line, or in an Ant script.">Creating rules files</a></div>
+</div>
+</div></body>
+</html>
